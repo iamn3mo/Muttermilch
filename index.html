@@ -599,7 +599,7 @@
                 <div class="export-import-left">
                     <button class="export-btn" onclick="exportToCSV()">📤 CSV Export</button>
                     <button class="import-btn" onclick="document.getElementById('csvFileInput').click()">📥 CSV Import</button>
-                    <input type="file" id="csvFileInput" class="file-input" accept=".csv" onchange="importFromCSV(event)">
+                    <input type="file" id="csvFileInput" class="file-input" accept=".csv,.txt,text/csv,text/plain,application/csv,application/excel" onchange="importFromCSV(event)">
                 </div>
             </div>
         </div>
