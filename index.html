@@ -1353,13 +1353,13 @@
                                 const hours = Math.floor(timeBetween);
                                 const minutes = Math.round((timeBetween - hours) * 60);
                                 if (minutes === 0) {
-                                    timeBetweenText = `<div style="text-align: center; color: #666; font-size: 12px; margin: 10px 0; font-weight: bold;">↓ ${hours}h später ↓</div>`;
+                                    timeBetweenText = `<div style="text-align: center; color: #666; font-size: 12px; margin: 10px 0; font-weight: bold;">↑ ${hours}h später ↑</div>`;
                                 } else {
-                                    timeBetweenText = `<div style="text-align: center; color: #666; font-size: 12px; margin: 10px 0; font-weight: bold;">↓ ${hours}h ${minutes}min später ↓</div>`;
+                                    timeBetweenText = `<div style="text-align: center; color: #666; font-size: 12px; margin: 10px 0; font-weight: bold;">↑ ${hours}h ${minutes}min später ↑</div>`;
                                 }
                             } else {
                                 const minutes = Math.round(timeBetween * 60);
-                                timeBetweenText = `<div style="text-align: center; color: #666; font-size: 12px; margin: 10px 0; font-weight: bold;">↓ ${minutes}min später ↓</div>`;
+                                timeBetweenText = `<div style="text-align: center; color: #666; font-size: 12px; margin: 10px 0; font-weight: bold;">↑ ${minutes}min später ↑</div>`;
                             }
                         }
                     }
