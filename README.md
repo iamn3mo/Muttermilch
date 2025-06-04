@@ -66,6 +66,24 @@ Erstellen Sie eine Textdatei mit der Endung `.csv` (z.B. `meine_daten.csv`)
 
 Klicken Sie auf `📥 CSV Import` und wählen Sie Ihre Datei aus.
 
+## ✏️ Daten bearbeiten & korrigieren
+
+### Direkt in der App bearbeiten:
+- **Stillzeiten anpassen:** Klicken Sie auf eine Session im Stillverlauf
+- **Einzelne Sessions:** Ändern Sie Baby, Brust, Start- und Endzeit
+- **Kombinierte Sessions:** Bearbeiten Sie jede Einzelphase separat
+- **Löschen:** Entfernen Sie versehentlich erfasste Sessions
+- **Baby-Management:** Babys umbenennen oder löschen
+
+### CSV-Daten extern bearbeiten:
+1. Daten mit `📤 CSV Export` exportieren
+2. CSV-Datei mit Texteditor öffnen (z.B. Notepad, TextEdit)
+3. Daten nach Bedarf ändern (Format beachten!)
+4. Aktuelle App-Daten löschen
+5. Bearbeitete Datei mit `📥 CSV Import` reimportieren
+
+**Tipp:** Für größere Korrekturen ist die externe Bearbeitung oft schneller!
+
 ## 🎯 Funktionen
 
 - **Live-Timer:** Echtzeiterfassung der Stillzeiten
