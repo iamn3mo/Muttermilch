@@ -71,7 +71,7 @@ Klicken Sie auf `📥 CSV Import` und wählen Sie Ihre Datei aus.
 - **Live-Timer:** Echtzeiterfassung der Stillzeiten
 - **Beide Brüste:** Automatische Erkennung von Seitenwechseln
 - **Multi-Baby Support:** Mehrere Babys verwalten
-- **Tages-Statistiken:** Durchschnitte, Min/Max-Werte
+- **Tages-Statistiken:** Durchschnitte
 - **Intelligente Gruppierung:** Sessions < 10 Min werden kombiniert
 - **CSV Export/Import:** Daten sichern und übertragen
 
