@@ -1473,15 +1473,23 @@
 
                         let startDateTime;
                         
-                        const startDateTimeCombinations = [
-                            `${startDate} ${startTime}`,
-                            `${startDate.split('.').reverse().join('-')} ${startTime}`,
-                            startDate.includes('T') ? startDate : null
-                        ].filter(Boolean);
+                        // Deutsches Datumsformat DD.MM.YYYY explizit parsen
+                        if (startDate.includes('.')) {
+                            const [day, month, year] = startDate.split('.');
+                            const isoDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+                            startDateTime = new Date(`${isoDate} ${startTime}`);
+                        } else {
+                            // Fallback für andere Formate
+                            const startDateTimeCombinations = [
+                                `${startDate} ${startTime}`,
+                                `${startDate.split('.').reverse().join('-')} ${startTime}`,
+                                startDate.includes('T') ? startDate : null
+                            ].filter(Boolean);
 
-                        for (const combination of startDateTimeCombinations) {
-                            startDateTime = new Date(combination);
-                            if (!isNaN(startDateTime.getTime())) break;
+                            for (const combination of startDateTimeCombinations) {
+                                startDateTime = new Date(combination);
+                                if (!isNaN(startDateTime.getTime())) break;
+                            }
                         }
 
                         if (!startDateTime || isNaN(startDateTime.getTime())) {
@@ -1497,15 +1505,23 @@
                             const endDate = fields[endDateIndex];
                             const endTime = fields[endTimeIndex];
 
-                            const endDateTimeCombinations = [
-                                `${endDate} ${endTime}`,
-                                `${endDate.split('.').reverse().join('-')} ${endTime}`,
-                                endDate.includes('T') ? endDate : null
-                            ].filter(Boolean);
+                            // Deutsches Datumsformat DD.MM.YYYY explizit parsen
+                            if (endDate.includes('.')) {
+                                const [day, month, year] = endDate.split('.');
+                                const isoDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+                                endDateTime = new Date(`${isoDate} ${endTime}`);
+                            } else {
+                                // Fallback für andere Formate
+                                const endDateTimeCombinations = [
+                                    `${endDate} ${endTime}`,
+                                    `${endDate.split('.').reverse().join('-')} ${endTime}`,
+                                    endDate.includes('T') ? endDate : null
+                                ].filter(Boolean);
 
-                            for (const combination of endDateTimeCombinations) {
-                                endDateTime = new Date(combination);
-                                if (!isNaN(endDateTime.getTime())) break;
+                                for (const combination of endDateTimeCombinations) {
+                                    endDateTime = new Date(combination);
+                                    if (!isNaN(endDateTime.getTime())) break;
+                                }
                             }
                         }
 
