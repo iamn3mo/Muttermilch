@@ -505,12 +505,14 @@
         }
 
         .single-session-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
             font-weight: 600;
             color: #333;
+            margin-bottom: 10px;
+        }
+
+        .single-session-delete {
+            text-align: left;
+            margin-bottom: 15px;
         }
 
         .form-row {
@@ -1573,7 +1575,9 @@
             return `
                 <div class="single-session-edit">
                     <div class="single-session-header">
-                        <span>${session.breast === 'left' ? 'Linke Brust' : 'Rechte Brust'} • ${session.baby} &nbsp;</span>
+                        ${session.breast === 'left' ? 'Linke Brust' : 'Rechte Brust'} • ${session.baby}
+                    </div>
+                    <div class="single-session-delete">
                         <button class="btn btn-danger btn-small" onclick="deleteSessionConfirm('${sessionId}')">🗑️ Löschen</button>
                     </div>
                     
