@@ -19,7 +19,6 @@ Muttermilch ist eine **kostenlose, webbasierte App** zum Tracken von Stillzeiten
 - Browser-Daten gelöscht werden
 - Browser-Cache geleert wird
 - Gerät zurückgesetzt wird
-- App neu installiert wird
 
 **Empfehlung:** Erstellen Sie regelmäßig ein Backup mit dem CSV-Export!
 
