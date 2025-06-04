@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stillzeit Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            min-height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .breast-buttons {
+            display: flex;
+            gap: 15px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .breast-btn {
+            flex: 1;
+            padding: 20px;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .breast-btn.left {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .breast-btn.right {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .breast-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .breast-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .breast-btn.active {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+            100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+        }
+
+        .timeline {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: white;
+        }
+
+        .timeline h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .last-breast-info {
+            border: 1px solid #c3e6c3;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .last-breast-info.left {
+            background: #e8f1ff;
+            border-color: #b3d4ff;
+            color: #2d4a7d;
+        }
+
+        .last-breast-info.right {
+            background: #ffe8f0;
+            border: 1px solid #ffb3d1;
+            color: #8b2a5b;
+        }
+
+        .session-entry {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .session-entry:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateX(5px);
+        }
+
+        .session-entry.right-breast {
+            border-left-color: #f5576c;
+        }
+
+        .session-entry.both-breasts {
+            border-left-color: #20bf6b;
+        }
+
+        .session-date {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .session-time {
+            color: #666;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .session-duration {
+            color: #28a745;
+            font-weight: 600;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .baby-section {
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .baby-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .baby-btn {
+            background: linear-gradient(135deg, #20bf6b 0%, #01a3a4 100%);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .baby-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+
+        .baby-select {
+            flex: 1;
+            padding: 0 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 14px;
+            background: white;
+            height: 44px;
+            box-sizing: border-box;
+        }
+
+        .export-import-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .export-import-left {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .export-btn, .import-btn {
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .export-btn:hover, .import-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            min-width: 300px;
+            max-width: 90%;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 40px 20px;
+        }
+
+        .current-session {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .current-session-time {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .day-summary {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin: 20px 0 15px 0;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .day-summary-date {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .day-summary-stats {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .data-delete-btn {
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .data-delete-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Stillzeit Tracker</h1>
+        </div>
+
+        <div class="breast-buttons">
+            <button class="breast-btn left" id="leftBreastBtn" onclick="toggleBreastfeeding('left')">
+                Linke Brust
+            </button>
+            <button class="breast-btn right" id="rightBreastBtn" onclick="toggleBreastfeeding('right')">
+                Rechte Brust
+            </button>
+        </div>
+
+        <div class="timeline">
+            <div id="currentSession"></div>
+            <h3>Stillverlauf</h3>
+            <div id="sessionsList">
+                <div class="empty-state">
+                    Noch keine Stillzeiten erfasst
+                </div>
+            </div>
+        </div>
+
+        <div class="baby-section">
+            <div class="baby-controls">
+                <button class="baby-btn" onclick="openBabyModal()">Baby eintragen</button>
+                <select class="baby-select" id="babySelect" onchange="switchBaby()">
+                    <option value="Baby">Baby</option>
+                </select>
+            </div>
+            <div class="export-import-controls">
+                <div class="export-import-left">
+                    <button class="export-btn" onclick="exportToCSV()">📤 CSV Export</button>
+                    <button class="import-btn" onclick="document.getElementById('csvFileInput').click()">📥 CSV Import</button>
+                    <input type="file" id="csvFileInput" class="file-input" accept=".csv" onchange="importFromCSV(event)">
+                </div>
+                <button class="data-delete-btn" onclick="confirmDeleteBaby()">🗑️ Daten löschen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="babyModal">
+        <div class="modal-content">
+            <div class="modal-title">Neues Baby hinzufügen</div>
+            <div class="form-group">
+                <label>Name des Babys:</label>
+                <input type="text" id="babyNameInput" placeholder="z.B. Emma">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeBabyModal()">Abbrechen</button>
+                <button class="btn btn-primary" onclick="addBaby()">Hinzufügen</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="deleteConfirmModal">
+        <div class="modal-content">
+            <div class="modal-title">Baby löschen</div>
+            <p>Möchten Sie wirklich das Baby "<span id="deleteBabyName"></span>" und alle dazugehörigen Stillzeiten löschen?</p>
+            <p style="color: #d63031; font-weight: 600; margin-top: 15px;">⚠️ Diese Aktion kann nicht rückgängig gemacht werden!</p>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeDeleteConfirmModal()">Abbrechen</button>
+                <button class="btn" style="background: #d63031; color: white;" onclick="deleteBaby()">Löschen</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // App State
+        let currentSession = null;
+        let sessions = [];
+        let babies = ['Baby'];
+        let currentBaby = 'Baby';
+        let currentTimer = null;
+
+        // Initialize app
+        window.addEventListener('load', async () => {
+            loadLocalData();
+            updateUI();
+        });
+
+        // Lokale Daten laden
+        function loadLocalData() {
+            try {
+                const savedSessions = localStorage.getItem('breastfeedingSessions');
+                if (savedSessions) {
+                    const parsedSessions = JSON.parse(savedSessions);
+                    // Date-Objekte wiederherstellen
+                    sessions = parsedSessions.map(session => ({
+                        ...session,
+                        startTime: new Date(session.startTime),
+                        endTime: new Date(session.endTime)
+                    }));
+                }
+
+                const savedBabies = localStorage.getItem('babies');
+                if (savedBabies) {
+                    babies = JSON.parse(savedBabies);
+                }
+
+                const savedCurrentBaby = localStorage.getItem('currentBaby');
+                if (savedCurrentBaby) {
+                    currentBaby = savedCurrentBaby;
+                }
+            } catch (error) {
+                console.log('localStorage not available, using memory storage only');
+                // Bei Fehlern Standardwerte verwenden
+                sessions = [];
+                babies = ['Baby'];
+                currentBaby = 'Baby';
+            }
+
+            updateBabySelect();
+        }
+
+        // Baby Modal
+        window.openBabyModal = () => {
+            document.getElementById('babyNameInput').value = '';
+            document.getElementById('babyModal').style.display = 'block';
+        };
+
+        window.closeBabyModal = () => {
+            document.getElementById('babyModal').style.display = 'none';
+        };
+
+        window.addBaby = () => {
+            const name = document.getElementById('babyNameInput').value.trim();
+            if (!name) {
+                alert('Bitte einen Namen eingeben');
+                return;
+            }
+
+            if (babies.includes(name)) {
+                alert('Dieses Baby existiert bereits');
+                return;
+            }
+
+            babies.push(name);
+            try {
+                localStorage.setItem('babies', JSON.stringify(babies));
+            } catch (error) {
+                console.log('localStorage not available');
+            }
+            updateBabySelect();
+            closeBabyModal();
+        };
+
+        window.switchBaby = () => {
+            currentBaby = document.getElementById('babySelect').value;
+            try {
+                localStorage.setItem('currentBaby', currentBaby);
+            } catch (error) {
+                console.log('localStorage not available');
+            }
+            updateUI();
+        };
+
+        // Baby löschen Funktionen
+        window.confirmDeleteBaby = () => {
+            document.getElementById('deleteBabyName').textContent = currentBaby;
+            document.getElementById('deleteConfirmModal').style.display = 'block';
+        };
+
+        window.closeDeleteConfirmModal = () => {
+            document.getElementById('deleteConfirmModal').style.display = 'none';
+        };
+
+        window.deleteBaby = () => {
+            const babyToDelete = currentBaby;
+            
+            sessions = sessions.filter(session => session.baby !== babyToDelete);
+            babies = babies.filter(baby => baby !== babyToDelete);
+            
+            if (babies.length === 0) {
+                babies = ['Baby'];
+                currentBaby = 'Baby';
+            } else {
+                currentBaby = babies[0];
+            }
+            
+            try {
+                // Sessions mit Date-Serialisierung speichern
+                const sessionsToSave = sessions.map(session => ({
+                    ...session,
+                    startTime: session.startTime.toISOString(),
+                    endTime: session.endTime.toISOString()
+                }));
+                localStorage.setItem('breastfeedingSessions', JSON.stringify(sessionsToSave));
+                localStorage.setItem('babies', JSON.stringify(babies));
+                localStorage.setItem('currentBaby', currentBaby);
+            } catch (error) {
+                console.log('localStorage not available');
+            }
+            
+            updateBabySelect();
+            updateUI();
+            closeDeleteConfirmModal();
+            
+            alert(`Baby "${babyToDelete}" und alle dazugehörigen Daten wurden gelöscht.`);
+        };
+
+        // Stillzeiten-Tracking
+        window.toggleBreastfeeding = (breast) => {
+            console.log('Toggle breastfeeding:', breast, 'Current session:', currentSession);
+            
+            if (currentSession && currentSession.breast === breast) {
+                stopBreastfeeding();
+            } else if (!currentSession) {
+                startBreastfeeding(breast);
+            }
+        };
+
+        function startBreastfeeding(breast) {
+            console.log('Starting breastfeeding:', breast);
+            currentSession = {
+                baby: currentBaby,
+                breast: breast,
+                startTime: new Date(),
+                endTime: null
+            };
+
+            currentTimer = setInterval(updateCurrentSessionDisplay, 1000);
+            
+            updateUI();
+        }
+
+        async function stopBreastfeeding() {
+            if (!currentSession) return;
+            
+            console.log('Stopping breastfeeding');
+
+            currentSession.endTime = new Date();
+            sessions.unshift({...currentSession});
+            
+            try {
+                localStorage.setItem('breastfeedingSessions', JSON.stringify(sessions));
+            } catch (error) {
+                console.log('localStorage not available, data stored in memory only');
+            }
+
+            currentSession = null;
+            if (currentTimer) {
+                clearInterval(currentTimer);
+                currentTimer = null;
+            }
+            
+            updateUI();
+        }
+
+        // UI Updates
+        function updateUI() {
+            updateBreastButtons();
+            updateCurrentSessionDisplay();
+            updateSessionsList();
+        }
+
+        function updateBreastButtons() {
+            const leftBtn = document.getElementById('leftBreastBtn');
+            const rightBtn = document.getElementById('rightBreastBtn');
+
+            if (currentSession) {
+                if (currentSession.breast === 'left') {
+                    leftBtn.textContent = 'Stop';
+                    leftBtn.classList.add('active');
+                    rightBtn.disabled = true;
+                } else {
+                    rightBtn.textContent = 'Stop';
+                    rightBtn.classList.add('active');  
+                    leftBtn.disabled = true;
+                }
+            } else {
+                leftBtn.textContent = 'Linke Brust';
+                rightBtn.textContent = 'Rechte Brust';
+                leftBtn.classList.remove('active');
+                rightBtn.classList.remove('active');
+                leftBtn.disabled = false;
+                rightBtn.disabled = false;
+            }
+        }
+
+        function updateCurrentSessionDisplay() {
+            const container = document.getElementById('currentSession');
+            
+            if (currentSession) {
+                const duration = Math.floor((new Date() - currentSession.startTime) / 1000);
+                const minutes = Math.floor(duration / 60);
+                const seconds = duration % 60;
+                
+                container.innerHTML = `
+                    <div class="current-session">
+                        <div class="current-session-time">${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}</div>
+                        <div>${currentSession.breast === 'left' ? 'Linke Brust' : 'Rechte Brust'} • ${currentSession.baby}</div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = '';
+            }
+        }
+
+        function updateSessionsList() {
+            const container = document.getElementById('sessionsList');
+            
+            if (sessions.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        Noch keine Stillzeiten erfasst
+                    </div>
+                `;
+                return;
+            }
+
+            const filteredSessions = sessions.filter(session => session.baby === currentBaby);
+            
+            if (filteredSessions.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        Keine Stillzeiten für ${currentBaby} erfasst
+                    </div>
+                `;
+                return;
+            }
+
+            // Sessions nach Datum sortieren (neueste zuerst)
+            const sortedSessions = [...filteredSessions].sort((a, b) => b.startTime - a.startTime);
+            
+            let lastBreastInfo = '';
+            if (sortedSessions.length > 0) {
+                const mostRecentSession = sortedSessions[0];
+                const lastBreast = mostRecentSession.breast === 'left' ? 'Links' : 'Rechts';
+                const breastClass = mostRecentSession.breast === 'left' ? 'left' : 'right';
+                lastBreastInfo = `<div class="last-breast-info ${breastClass}">Zuletzt angelegt: ${lastBreast}</div>`;
+            }
+            
+            // Sessions zu kombinierten Stillzeiten gruppieren (weniger als 10 Minuten Abstand)
+            const combinedSessions = [];
+            const processedIndices = new Set();
+            
+            for (let i = 0; i < sortedSessions.length; i++) {
+                if (processedIndices.has(i)) continue;
+                
+                const session = sortedSessions[i];
+                let combinedSession = {
+                    sessions: [session],
+                    baby: session.baby,
+                    startTime: session.startTime,
+                    endTime: session.endTime,
+                    breasts: [session.breast]
+                };
+
+                // Suche nach nahen Sessions (sowohl frühere als auch spätere)
+                for (let j = 0; j < sortedSessions.length; j++) {
+                    if (i === j || processedIndices.has(j)) continue;
+                    
+                    const otherSession = sortedSessions[j];
+                    
+                    // Prüfe Zeitabstand in beide Richtungen
+                    const timeDiffStart = Math.abs(combinedSession.startTime - otherSession.endTime) / 1000 / 60;
+                    const timeDiffEnd = Math.abs(combinedSession.endTime - otherSession.startTime) / 1000 / 60;
+                    const minTimeDiff = Math.min(timeDiffStart, timeDiffEnd);
+                    
+                    if (minTimeDiff < 10) {
+                        // Session zur kombinierten Session hinzufügen
+                        combinedSession.sessions.push(otherSession);
+                        combinedSession.breasts.push(otherSession.breast);
+                        combinedSession.startTime = new Date(Math.min(combinedSession.startTime, otherSession.startTime));
+                        combinedSession.endTime = new Date(Math.max(combinedSession.endTime, otherSession.endTime));
+                        
+                        // Index als verarbeitet markieren
+                        processedIndices.add(j);
+                    }
+                }
+                
+                processedIndices.add(i);
+                combinedSessions.push(combinedSession);
+            }
+            
+            // Kombinierte Sessions nach Startzeit sortieren (neueste zuerst)
+            combinedSessions.sort((a, b) => b.startTime - a.startTime);
+
+            let sessionsHtml = '';
+            let currentDay = null;
+            
+            for (let i = 0; i < combinedSessions.length; i++) {
+                const combinedSession = combinedSessions[i];
+                const sessionDate = combinedSession.startTime.toLocaleDateString('de-DE');
+                
+                // Prüfen ob neuer Tag beginnt
+                if (currentDay !== sessionDate) {
+                    // Tages-Zusammenfassung basierend auf kombinierten Sessions erstellen
+                    const dayCombinedSessions = combinedSessions.filter(session => 
+                        session.startTime.toLocaleDateString('de-DE') === sessionDate
+                    );
+                    
+                    const daySessionsCount = dayCombinedSessions.length;
+                    const totalDayDuration = dayCombinedSessions.reduce((sum, session) => 
+                        sum + Math.floor((session.endTime - session.startTime) / 1000 / 60), 0
+                    );
+                    const avgDuration = Math.round(totalDayDuration / daySessionsCount);
+                    
+                    // Durchschnittlicher Abstand zwischen kombinierten Stillzeiten berechnen
+                    let avgInterval = 0;
+                    if (dayCombinedSessions.length > 1) {
+                        // Kombinierte Sessions des Tages nach Zeit sortieren (älteste zuerst)
+                        const sortedDaySessions = [...dayCombinedSessions].sort((a, b) => a.startTime - b.startTime);
+                        
+                        let totalIntervals = 0;
+                        let intervalCount = 0;
+                        
+                        for (let j = 0; j < sortedDaySessions.length - 1; j++) {
+                            const currentSessionEnd = sortedDaySessions[j].endTime;
+                            const nextSessionStart = sortedDaySessions[j + 1].startTime;
+                            const intervalMinutes = (nextSessionStart - currentSessionEnd) / 1000 / 60;
+                            
+                            if (intervalMinutes > 0) {
+                                totalIntervals += intervalMinutes;
+                                intervalCount++;
+                            }
+                        }
+                        
+                        if (intervalCount > 0) {
+                            avgInterval = Math.round(totalIntervals / intervalCount);
+                        }
+                    }
+                    
+                    const dayName = new Date(combinedSession.startTime).toLocaleDateString('de-DE', {
+                        weekday: 'long',
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
+                    
+                    let intervalText = '';
+                    if (avgInterval > 0) {
+                        if (avgInterval >= 60) {
+                            const hours = Math.floor(avgInterval / 60);
+                            const minutes = avgInterval % 60;
+                            if (minutes === 0) {
+                                intervalText = ` • ⌀ ${hours}h Abstand`;
+                            } else {
+                                intervalText = ` • ⌀ ${hours}h ${minutes}min Abstand`;
+                            }
+                        } else {
+                            intervalText = ` • ⌀ ${avgInterval}min Abstand`;
+                        }
+                    }
+                    
+                    sessionsHtml += `
+                        <div class="day-summary">
+                            <div class="day-summary-date">${dayName}</div>
+                            <div class="day-summary-stats">${daySessionsCount} Stillzeiten • ⌀ ${avgDuration} Min${intervalText}</div>
+                        </div>
+                    `;
+                    
+                    currentDay = sessionDate;
+                }
+                
+                const duration = Math.floor((combinedSession.endTime - combinedSession.startTime) / 1000 / 60);
+                const startTime = combinedSession.startTime.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'});
+                const endTime = combinedSession.endTime.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'});
+                const date = combinedSession.startTime.toLocaleDateString('de-DE');
+                
+                const orderedSessions = combinedSession.sessions.sort((a, b) => a.startTime - b.startTime);
+                
+                const uniqueBreasts = [...new Set(combinedSession.breasts)];
+                let breastText;
+                let durationDetails = '';
+                
+                if (uniqueBreasts.length === 2) {
+                    breastText = 'Beide Brüste';
+                } else if (uniqueBreasts[0] === 'left') {
+                    breastText = 'Linke Brust';
+                } else {
+                    breastText = 'Rechte Brust';
+                }
+                
+                if (combinedSession.sessions.length > 1) {
+                    breastText += ` (${combinedSession.sessions.length} Phasen)`;
+                    
+                    const phaseDurations = orderedSessions.map(session => {
+                        const phaseDuration = Math.floor((session.endTime - session.startTime) / 1000 / 60);
+                        const breastName = session.breast === 'left' ? 'L' : 'R';
+                        return `${breastName}: ${phaseDuration}min`;
+                    });
+                    
+                    durationDetails = `<div class="session-phases" style="color: #666; font-size: 12px; margin-top: 5px;">${phaseDurations.join(' → ')}</div>`;
+                }
+
+                let timeBetweenText = '';
+                if (i < combinedSessions.length - 1) {
+                    const nextSession = combinedSessions[i + 1];
+                    const nextSessionDate = nextSession.startTime.toLocaleDateString('de-DE');
+                    
+                    // Nur Zeit zwischen Sessions anzeigen wenn am gleichen Tag
+                    if (sessionDate === nextSessionDate) {
+                        const timeBetween = (combinedSession.startTime - nextSession.endTime) / 1000 / 60 / 60;
+                        
+                        if (timeBetween > 0) {
+                            if (timeBetween >= 1) {
+                                const hours = Math.floor(timeBetween);
+                                const minutes = Math.round((timeBetween - hours) * 60);
+                                if (minutes === 0) {
+                                    timeBetweenText = `<div style="text-align: center; color: #666; font-size: 12px; margin: 10px 0; font-style: italic;">↓ ${hours}h später ↓</div>`;
+                                } else {
+                                    timeBetweenText = `<div style="text-align: center; color: #666; font-size: 12px; margin: 10px 0; font-style: italic;">↓ ${hours}h ${minutes}min später ↓</div>`;
+                                }
+                            } else {
+                                const minutes = Math.round(timeBetween * 60);
+                                timeBetweenText = `<div style="text-align: center; color: #666; font-size: 12px; margin: 10px 0; font-style: italic;">↓ ${minutes}min später ↓</div>`;
+                            }
+                        }
+                    }
+                }
+                
+                // CSS-Klasse für Sessions bestimmen
+                let sessionClass = '';
+                if (uniqueBreasts.length === 2) {
+                    sessionClass = 'both-breasts';
+                } else if (uniqueBreasts.includes('right')) {
+                    sessionClass = 'right-breast';
+                }
+                
+                sessionsHtml += `
+                    <div class="session-entry ${sessionClass}">
+                        <div class="session-date">
+                            ${breastText} • ${combinedSession.baby}
+                        </div>
+                        <div class="session-time">${date} • ${startTime} - ${endTime}</div>
+                        <div class="session-duration">${duration} Minuten gesamt</div>
+                        ${durationDetails}
+                    </div>
+                    ${timeBetweenText}
+                `;
+            }
+
+            container.innerHTML = lastBreastInfo + sessionsHtml;
+        }
+
+        function updateBabySelect() {
+            const select = document.getElementById('babySelect');
+            select.innerHTML = babies.map(baby => 
+                `<option value="${baby}" ${baby === currentBaby ? 'selected' : ''}>${baby}</option>`
+            ).join('');
+        }
+
+        // CSV Export/Import Funktionen
+        window.exportToCSV = () => {
+            if (sessions.length === 0) {
+                alert('Keine Daten zum Exportieren vorhanden');
+                return;
+            }
+
+            const headers = ['Baby', 'Brust', 'Startdatum', 'Startzeit', 'Enddatum', 'Endzeit', 'Dauer (Minuten)'];
+            
+            const rows = sessions.map(session => {
+                const duration = Math.floor((session.endTime - session.startTime) / 1000 / 60);
+                const startDate = session.startTime.toLocaleDateString('de-DE');
+                const startTime = session.startTime.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'});
+                const endDate = session.endTime.toLocaleDateString('de-DE');
+                const endTime = session.endTime.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'});
+                const breast = session.breast === 'left' ? 'Links' : 'Rechts';
+                
+                return [session.baby, breast, startDate, startTime, endDate, endTime, duration];
+            });
+
+            const csvContent = [headers, ...rows]
+                .map(row => row.map(field => `"${field}"`).join(','))
+                .join('\n');
+
+            const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `stillzeiten_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            alert(`${sessions.length} Stillzeiten erfolgreich als CSV exportiert!`);
+        };
+
+        window.importFromCSV = async (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            try {
+                const text = await file.text();
+                const lines = text.split('\n').filter(line => line.trim());
+                
+                if (lines.length < 2) {
+                    alert('CSV-Datei ist leer oder ungültig');
+                    return;
+                }
+
+                const headerLine = lines[0];
+                const headers = headerLine.split(',').map(field => 
+                    field.replace(/^"/, '').replace(/"$/, '').trim().toLowerCase()
+                );
+
+                const babyIndex = headers.findIndex(h => h.includes('baby'));
+                const breastIndex = headers.findIndex(h => h.includes('brust') || h.includes('breast'));
+                const startDateIndex = headers.findIndex(h => h.includes('startdatum') || h.includes('start') && h.includes('datum'));
+                const startTimeIndex = headers.findIndex(h => h.includes('startzeit') || h.includes('start') && h.includes('zeit'));
+                const endDateIndex = headers.findIndex(h => h.includes('enddatum') || h.includes('end') && h.includes('datum'));
+                const endTimeIndex = headers.findIndex(h => h.includes('endzeit') || h.includes('end') && h.includes('zeit'));
+
+                if (babyIndex === -1 || breastIndex === -1 || startDateIndex === -1 || startTimeIndex === -1) {
+                    alert('CSV-Format ungültig. Benötigte Spalten: Baby, Brust, Startdatum, Startzeit');
+                    return;
+                }
+
+                const dataLines = lines.slice(1);
+                const importedSessions = [];
+                const importedBabies = new Set(babies);
+                let errorsCount = 0;
+
+                for (let i = 0; i < dataLines.length; i++) {
+                    const line = dataLines[i];
+                    
+                    const fields = line.split(',').map(field => 
+                        field.replace(/^"/, '').replace(/"$/, '').trim()
+                    );
+
+                    try {
+                        const baby = fields[babyIndex] || 'Baby';
+                        const breastRaw = fields[breastIndex] || '';
+                        const breast = breastRaw.toLowerCase().includes('links') || breastRaw.toLowerCase().includes('left') ? 'left' : 'right';
+                        const startDate = fields[startDateIndex] || '';
+                        const startTime = fields[startTimeIndex] || '';
+
+                        if (!startDate || !startTime) {
+                            console.warn(`Zeile ${i + 2}: Fehlende Start-Daten`);
+                            errorsCount++;
+                            continue;
+                        }
+
+                        let startDateTime;
+                        
+                        const startDateTimeCombinations = [
+                            `${startDate} ${startTime}`,
+                            `${startDate.split('.').reverse().join('-')} ${startTime}`,
+                            startDate.includes('T') ? startDate : null
+                        ].filter(Boolean);
+
+                        for (const combination of startDateTimeCombinations) {
+                            startDateTime = new Date(combination);
+                            if (!isNaN(startDateTime.getTime())) break;
+                        }
+
+                        if (!startDateTime || isNaN(startDateTime.getTime())) {
+                            console.warn(`Zeile ${i + 2}: Ungültiges Startdatum/zeit: ${startDate} ${startTime}`);
+                            errorsCount++;
+                            continue;
+                        }
+
+                        let endDateTime = null;
+                        
+                        if (endDateIndex !== -1 && endTimeIndex !== -1 && 
+                            fields[endDateIndex] && fields[endTimeIndex]) {
+                            
+                            const endDate = fields[endDateIndex];
+                            const endTime = fields[endTimeIndex];
+
+                            const endDateTimeCombinations = [
+                                `${endDate} ${endTime}`,
+                                `${endDate.split('.').reverse().join('-')} ${endTime}`,
+                                endDate.includes('T') ? endDate : null
+                            ].filter(Boolean);
+
+                            for (const combination of endDateTimeCombinations) {
+                                endDateTime = new Date(combination);
+                                if (!isNaN(endDateTime.getTime())) break;
+                            }
+                        }
+
+                        if (!endDateTime || isNaN(endDateTime.getTime())) {
+                            endDateTime = new Date(startDateTime.getTime() + 15 * 60 * 1000);
+                        }
+
+                        if (endDateTime <= startDateTime) {
+                            endDateTime = new Date(startDateTime.getTime() + 15 * 60 * 1000);
+                        }
+
+                        const session = {
+                            baby,
+                            breast,
+                            startTime: startDateTime,
+                            endTime: endDateTime
+                        };
+
+                        importedSessions.push(session);
+                        importedBabies.add(baby);
+
+                    } catch (error) {
+                        console.error(`Fehler in Zeile ${i + 2}:`, error);
+                        errorsCount++;
+                    }
+                }
+
+                if (importedSessions.length === 0) {
+                    alert(`Keine gültigen Daten importiert. ${errorsCount} Zeilen enthielten Fehler.`);
+                    return;
+                }
+
+                const existingSessionsCount = sessions.length;
+                importedSessions.forEach(importedSession => {
+                    const exists = sessions.some(session => 
+                        Math.abs(session.startTime - importedSession.startTime) < 60000 &&
+                        session.breast === importedSession.breast &&
+                        session.baby === importedSession.baby
+                    );
+                    
+                    if (!exists) {
+                        sessions.push(importedSession);
+                    }
+                });
+
+                sessions.sort((a, b) => b.startTime - a.startTime);
+                babies = Array.from(importedBabies);
+                
+                try {
+                    // Sessions mit Date-Serialisierung speichern
+                    const sessionsToSave = sessions.map(session => ({
+                        ...session,
+                        startTime: session.startTime.toISOString(),
+                        endTime: session.endTime.toISOString()
+                    }));
+                    localStorage.setItem('breastfeedingSessions', JSON.stringify(sessionsToSave));
+                    localStorage.setItem('babies', JSON.stringify(babies));
+                } catch (error) {
+                    console.log('localStorage not available');
+                }
+
+                updateBabySelect();
+                updateUI();
+
+                const newSessionsCount = sessions.length - existingSessionsCount;
+                let message = `${newSessionsCount} neue Stillzeiten erfolgreich importiert!\nInsgesamt: ${sessions.length} Einträge`;
+                
+                if (errorsCount > 0) {
+                    message += `\n${errorsCount} Zeilen konnten nicht importiert werden (siehe Konsole für Details)`;
+                }
+
+                alert(message);
+
+            } catch (error) {
+                console.error('Import error:', error);
+                alert('Fehler beim Importieren der CSV-Datei. Bitte Format überprüfen.');
+            }
+
+            event.target.value = '';
+        };
+
+        // Modal close on outside click
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
