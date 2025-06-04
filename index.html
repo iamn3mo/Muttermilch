@@ -258,7 +258,6 @@
         }
 
         .baby-btn, .rename-baby-btn, .baby-delete-btn {
-            background: linear-gradient(135deg, #20bf6b 0%, #01a3a4 100%);
             color: white;
             border: none;
             padding: 0 20px;
@@ -271,6 +270,10 @@
             align-items: center;
             justify-content: center;
             font-size: 14px;
+        }
+
+        .baby-btn, .rename-baby-btn {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
         }
 
         .baby-btn:hover, .rename-baby-btn:hover, .baby-delete-btn:hover {
@@ -309,7 +312,7 @@
         }
 
         .export-btn, .import-btn {
-            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
             color: white;
             border: none;
             padding: 8px 12px;
@@ -1408,7 +1411,7 @@
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
             link.setAttribute('href', url);
-            link.setAttribute('download', `stillzeiten_${new Date().toISOString().split('T')[0]}.CSV`);
+            link.setAttribute('download', `stillzeiten_${new Date().toISOString().split('T')[0]}.csv`);
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
