@@ -242,14 +242,22 @@
         }
 
         .baby-controls {
+            margin-bottom: 15px;
+        }
+
+        .baby-select-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .baby-buttons-row {
             display: flex;
             gap: 10px;
-            margin-bottom: 15px;
             align-items: stretch;
             flex-wrap: wrap;
         }
 
-        .baby-btn, .rename-baby-btn {
+        .baby-btn, .rename-baby-btn, .baby-delete-btn {
             background: linear-gradient(135deg, #20bf6b 0%, #01a3a4 100%);
             color: white;
             border: none;
@@ -265,13 +273,17 @@
             font-size: 14px;
         }
 
-        .baby-btn:hover, .rename-baby-btn:hover {
+        .baby-btn:hover, .rename-baby-btn:hover, .baby-delete-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 15px rgba(0,0,0,0.2);
         }
 
+        .baby-delete-btn {
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+        }
+
         .baby-select {
-            flex: 1;
+            width: 100%;
             padding: 0 12px;
             border: 2px solid #e9ecef;
             border-radius: 10px;
@@ -572,11 +584,16 @@
 
         <div class="baby-section">
             <div class="baby-controls">
-                <select class="baby-select" id="babySelect" onchange="switchBaby()">
-                    <option value="Baby">Baby</option>
-                </select>
-                <button class="rename-baby-btn" onclick="openRenameBabyModal()">Umbenennen</button>
-                <button class="baby-btn" onclick="openBabyModal()">Neues Baby</button>
+                <div class="baby-select-row">
+                    <select class="baby-select" id="babySelect" onchange="switchBaby()">
+                        <option value="Baby">Baby</option>
+                    </select>
+                </div>
+                <div class="baby-buttons-row">
+                    <button class="rename-baby-btn" onclick="openRenameBabyModal()">Umbenennen</button>
+                    <button class="baby-btn" onclick="openBabyModal()">Neues Baby</button>
+                    <button class="baby-delete-btn" onclick="confirmDeleteBaby()">🗑️ Baby löschen</button>
+                </div>
             </div>
             <div class="export-import-controls">
                 <div class="export-import-left">
@@ -584,7 +601,6 @@
                     <button class="import-btn" onclick="document.getElementById('csvFileInput').click()">📥 CSV Import</button>
                     <input type="file" id="csvFileInput" class="file-input" accept=".csv" onchange="importFromCSV(event)">
                 </div>
-                <button class="data-delete-btn" onclick="confirmDeleteBaby()">🗑️ Daten löschen</button>
             </div>
         </div>
     </div>
