@@ -93,13 +93,29 @@ Klicken Sie auf `📥 CSV Import` und wählen Sie Ihre Datei aus.
 - **Intelligente Gruppierung:** Sessions < 10 Min werden kombiniert
 - **CSV Export/Import:** Daten sichern und übertragen
 
-## 🌐 Installation
+## 🌐 Installation als App
 
-Die App kann als **Progressive Web App (PWA)** installiert werden:
+Die App kann als **Progressive Web App (PWA)** auf dem Startbildschirm installiert werden:
 
+### 📱 iPhone/iPad (iOS):
+1. Safari öffnen und zur App navigieren
+2. Teilen-Button (📤) antippen
+3. "Zum Home-Bildschirm" auswählen
+4. App erscheint mit Milchflaschen-Icon auf dem Startbildschirm
+
+### 🤖 Android:
 1. Chrome öffnen und zur App navigieren
-2. Drei Punkte → "Zum Startbildschirm hinzufügen"
-3. App erscheint wie eine native App auf dem Homescreen
+2. Drei Punkte → "App installieren" oder "Zum Startbildschirm hinzufügen"
+3. Installation bestätigen
+4. App erscheint wie eine native App im App-Drawer
+
+### 💻 Desktop (Chrome, Edge):
+1. Browser öffnen und zur App navigieren
+2. Adressleiste: Install-Symbol (⊕) oder "App installieren"
+3. Installation bestätigen
+4. App startet als eigenständiges Fenster
+
+**Vorteil:** Nach der Installation läuft die App wie eine native App, auch ohne Browser-Adressleiste!
 
 ## 💡 Tipps
 
