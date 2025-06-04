@@ -42,7 +42,7 @@ Sie können auch handschriftlich erfasste Stillzeiten nachträglich importieren:
 
 ### Schritt 1: CSV-Datei erstellen
 
-Erstellen Sie eine Textdatei mit der Endung `.csv` (z.B. `meine_daten.csv`)
+Erstellen Sie eine Textdatei mit der Endung `.CSV` (z.B. `meine_daten.CSV`)
 
 ### Schritt 2: Daten im CSV-Format eingeben
 
