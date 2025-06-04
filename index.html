@@ -11,6 +11,9 @@
     <!-- PWA Icons -->
     <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M35 20 Q35 15 40 15 L60 15 Q65 15 65 20 L65 30 Q70 35 70 45 L70 75 Q70 85 60 85 L40 85 Q30 85 30 75 L30 45 Q30 35 35 30 Z' fill='%23ff9a9e'/%3E%3Cpath d='M35 20 L65 20 L65 30 Q70 35 70 45 L70 60 Q70 65 65 65 L35 65 Q30 65 30 60 L30 45 Q30 35 35 30 Z' fill='%23ffffff' opacity='0.9'/%3E%3Ccircle cx='45' cy='35' r='2' fill='%23ff9a9e'/%3E%3Ccircle cx='55' cy='35' r='2' fill='%23ff9a9e'/%3E%3Cpath d='M40 15 Q40 10 45 10 L55 10 Q60 10 60 15' fill='none' stroke='%23ff9a9e' stroke-width='2'/%3E%3C/svg%3E">
     
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiTXV0dGVybWlsY2ggLSBTdGlsbHplaXQgVHJhY2tlciIsInNob3J0X25hbWUiOiJNdXR0ZXJtaWxjaCIsImRlc2NyaXB0aW9uIjoiS29zdGVubG9zZXIgU3RpbGx6ZWl0LVRyYWNrZXIgZsO8ciBFbHRlcm4iLCJzdGFydF91cmwiOiIuLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwidGhlbWVfY29sb3IiOiIjZmY5YTllIiwiYmFja2dyb3VuZF9jb2xvciI6IiNmZmZmZmYiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAgMTAwJyUzRSUzQ3BhdGggZD0nTTM1IDIwIFEzNSAxNSA0MCAxNSBMNjAgMTUgUTY1IDE1IDY1IDIwIEw2NSAzMCBRNzAgMzUgNzAgNDUgTDcwIDc1IFE3MCA4NSA2MCA4NSBMNDAgODUgUTMwIDg1IDMwIDc1IEwzMCA0NSBRMzAgMzUgMzUgMzAgWidmaWxsPSclMjNmZjlhOWUnLyUzRSUzQ3BhdGggZD0nTTM1IDIwIEw2NSAyMCBMNjUgMzAgUTcwIDM1IDcwIDQ1IEw3MCA2MCBRNzAgNjUgNjUgNjUgTDM1IDY1IFEzMCA2NSAzMCA2MCBMMzAgNDUgUTMwIDM1IDM1IDMwIFonZmlsbD0nJTIzZmZmZmZmJyBvcGFjaXR5PScwLjknLyUzRSUzQ2NpcmNsZSBjeD0nNDUnIGN5PSczNScgcj0nMicgZmlsbD0nJTIzZmY5YTllJy8lM0UlM0NjaXJjbGUgY3g9JzU1JyBjeT0nMzUnIHI9JzInIGZpbGw9JyUyM2ZmOWE5ZScvJTNFJTNDcGF0aCBkPSdNNDAgMTUgUTQwIDEwIDQ1IDEwIEw1NSAxMCBRNjAgMTAgNjAgMTUnIGZpbGw9J25vbmUnIHN0cm9rZT0nJTIzZmY5YTllJyBzdHJva2Utd2lkdGg9JzInLyUzRSUzQy9zdmclM0UiLCJzaXplcyI6ImFueSIsInR5cGUiOiJpbWFnZS9zdmcreG1sIn1dfQ==">
+    
     <!-- PWA Manifest Meta Tags -->
     <meta name="theme-color" content="#ff9a9e">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -761,7 +764,7 @@
                 <p>Sie können auch handschriftlich erfasste Stillzeiten nachträglich importieren:</p>
 
                 <h3>Schritt 1: CSV-Datei erstellen</h3>
-                <p>Erstellen Sie eine Textdatei mit der Endung <code>.CSV</code> (z.B. <code>meine_daten.CSV</code>)</p>
+                <p>Erstellen Sie eine Textdatei mit der Endung <code>.csv</code> (z.B. <code>meine_daten.csv</code>)</p>
 
                 <h3>Schritt 2: Daten im CSV-Format eingeben</h3>
                 <div class="code-block">"Baby","Brust","Startdatum","Startzeit","Enddatum","Endzeit","Dauer (Minuten)"
@@ -813,13 +816,34 @@
                     <li><strong>CSV Export/Import:</strong> Daten sichern und übertragen</li>
                 </ul>
 
-                <h2>🌐 Installation</h2>
-                <p>Die App kann als <strong>Progressive Web App (PWA)</strong> installiert werden:</p>
+                <h2>🌐 Installation als App</h2>
+                <p>Die App kann als <strong>Progressive Web App (PWA)</strong> auf dem Startbildschirm installiert werden:</p>
+                
+                <h3>📱 iPhone/iPad (iOS):</h3>
+                <ol>
+                    <li>Safari öffnen und zur App navigieren</li>
+                    <li>Teilen-Button (📤) antippen</li>
+                    <li>"Zum Home-Bildschirm" auswählen</li>
+                    <li>App erscheint mit Milchflaschen-Icon auf dem Startbildschirm</li>
+                </ol>
+
+                <h3>🤖 Android:</h3>
                 <ol>
                     <li>Chrome öffnen und zur App navigieren</li>
-                    <li>Drei Punkte → "Zum Startbildschirm hinzufügen"</li>
-                    <li>App erscheint wie eine native App auf dem Homescreen</li>
+                    <li>Drei Punkte → "App installieren" oder "Zum Startbildschirm hinzufügen"</li>
+                    <li>Installation bestätigen</li>
+                    <li>App erscheint wie eine native App im App-Drawer</li>
                 </ol>
+
+                <h3>💻 Desktop (Chrome, Edge):</h3>
+                <ol>
+                    <li>Browser öffnen und zur App navigieren</li>
+                    <li>Adressleiste: Install-Symbol (⊕) oder "App installieren"</li>
+                    <li>Installation bestätigen</li>
+                    <li>App startet als eigenständiges Fenster</li>
+                </ol>
+
+                <p><span class="highlight">Vorteil:</span> Nach der Installation läuft die App wie eine native App, auch ohne Browser-Adressleiste!</p>
 
                 <h2>💡 Tipps</h2>
                 <ul>
@@ -1277,6 +1301,24 @@
                         year: 'numeric'
                     });
                     
+                    // Prüfe auf Heute/Gestern
+                    const today = new Date();
+                    const yesterday = new Date(today);
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    
+                    const sessionDateStr = combinedSession.startTime.toLocaleDateString('de-DE');
+                    const todayStr = today.toLocaleDateString('de-DE');
+                    const yesterdayStr = yesterday.toLocaleDateString('de-DE');
+                    
+                    let displayName;
+                    if (sessionDateStr === todayStr) {
+                        displayName = 'Heute';
+                    } else if (sessionDateStr === yesterdayStr) {
+                        displayName = 'Gestern';
+                    } else {
+                        displayName = dayName;
+                    }
+                    
                     function formatInterval(minutes) {
                         if (minutes >= 60) {
                             const hours = Math.floor(minutes / 60);
@@ -1298,7 +1340,7 @@
                     
                     sessionsHtml += `
                         <div class="day-summary">
-                            <div class="day-summary-date">${dayName}</div>
+                            <div class="day-summary-date">${displayName}</div>
                             <div class="day-summary-stats">${daySessionsCount} Stillzeiten • ⌀ ${avgDuration} Min${intervalText}</div>
                         </div>
                     `;
