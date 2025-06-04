@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stillzeit Tracker</title>
+    <title>Muttermilch</title>
     <style>
         * {
             margin: 0;
@@ -43,6 +43,28 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
+        .info-icon {
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #20bf6b 0%, #01a3a4 100%);
+            color: white;
+            border: 2px solid white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+            font-weight: bold;
+        }
+
+        .info-icon:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
         .breast-buttons {
             display: flex;
             gap: 15px;
@@ -59,8 +81,6 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
         }
 
         .breast-btn.left {
@@ -108,24 +128,60 @@
         }
 
         .last-breast-info {
-            border: 1px solid #c3e6c3;
+            border: none;
             border-radius: 8px;
             padding: 10px 15px;
             margin-bottom: 15px;
             font-size: 14px;
             font-weight: 600;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
 
         .last-breast-info.left {
-            background: #e8f1ff;
-            border-color: #b3d4ff;
-            color: #2d4a7d;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
         .last-breast-info.right {
-            background: #ffe8f0;
-            border: 1px solid #ffb3d1;
-            color: #8b2a5b;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .current-session {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .current-session-time {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .day-summary {
+            background: linear-gradient(135deg, #20bf6b 0%, #01a3a4 100%);
+            color: white;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin: 20px 0 15px 0;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .day-summary-date {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .day-summary-stats {
+            font-size: 12px;
+            opacity: 0.9;
+            line-height: 1.4;
         }
 
         .session-entry {
@@ -143,7 +199,7 @@
         }
 
         .session-entry.right-breast {
-            border-left-color: #f5576c;
+            border-left-color: #f093fb;
         }
 
         .session-entry.both-breasts {
@@ -183,7 +239,7 @@
             flex-wrap: wrap;
         }
 
-        .baby-btn {
+        .baby-btn, .rename-baby-btn {
             background: linear-gradient(135deg, #20bf6b 0%, #01a3a4 100%);
             color: white;
             border: none;
@@ -199,7 +255,7 @@
             font-size: 14px;
         }
 
-        .baby-btn:hover {
+        .baby-btn:hover, .rename-baby-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 15px rgba(0,0,0,0.2);
         }
@@ -248,6 +304,28 @@
         }
 
         .export-btn:hover, .import-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .data-delete-btn {
+            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .data-delete-btn:hover {
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
@@ -343,70 +421,70 @@
             padding: 40px 20px;
         }
 
-        .current-session {
-            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
-            color: white;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            text-align: center;
+        .readme-modal {
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
-        .current-session-time {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 5px;
+        .readme-content {
+            line-height: 1.6;
+            color: #333;
         }
 
-        .day-summary {
-            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
-            color: white;
-            padding: 12px 15px;
-            border-radius: 10px;
-            margin: 20px 0 15px 0;
-            font-size: 14px;
-            font-weight: 600;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        .readme-content h2 {
+            color: #667eea;
+            margin: 20px 0 10px 0;
+            font-size: 18px;
         }
 
-        .day-summary-date {
+        .readme-content h3 {
+            color: #555;
+            margin: 15px 0 8px 0;
             font-size: 16px;
-            margin-bottom: 5px;
         }
 
-        .day-summary-stats {
-            font-size: 12px;
-            opacity: 0.9;
+        .readme-content p {
+            margin-bottom: 12px;
         }
 
-        .data-delete-btn {
-            background: linear-gradient(135deg, #e17055 0%, #d63031 100%);
-            color: white;
-            border: none;
-            padding: 8px 12px;
+        .readme-content ul {
+            margin: 10px 0 10px 20px;
+        }
+
+        .readme-content li {
+            margin-bottom: 8px;
+        }
+
+        .readme-content code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+
+        .readme-content .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
             border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            height: 32px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            box-sizing: border-box;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
         }
 
-        .data-delete-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Stillzeit Tracker</h1>
+            <h1>Muttermilch <span class="info-icon" onclick="showReadme()">i</span></h1>
         </div>
 
         <div class="breast-buttons">
@@ -430,10 +508,11 @@
 
         <div class="baby-section">
             <div class="baby-controls">
-                <button class="baby-btn" onclick="openBabyModal()">Baby eintragen</button>
+                <button class="baby-btn" onclick="openBabyModal()">Neues Baby</button>
                 <select class="baby-select" id="babySelect" onchange="switchBaby()">
                     <option value="Baby">Baby</option>
                 </select>
+                <button class="rename-baby-btn" onclick="openRenameBabyModal()">Umbenennen</button>
             </div>
             <div class="export-import-controls">
                 <div class="export-import-left">
@@ -461,6 +540,20 @@
         </div>
     </div>
 
+    <div class="modal" id="renameBabyModal">
+        <div class="modal-content">
+            <div class="modal-title">Baby umbenennen</div>
+            <div class="form-group">
+                <label>Neuer Name für "<span id="currentBabyName"></span>":</label>
+                <input type="text" id="newBabyNameInput" placeholder="Neuer Name">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeRenameBabyModal()">Abbrechen</button>
+                <button class="btn btn-primary" onclick="renameBaby()">Umbenennen</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal" id="deleteConfirmModal">
         <div class="modal-content">
             <div class="modal-title">Baby löschen</div>
@@ -469,6 +562,106 @@
             <div class="modal-buttons">
                 <button class="btn btn-secondary" onclick="closeDeleteConfirmModal()">Abbrechen</button>
                 <button class="btn" style="background: #d63031; color: white;" onclick="deleteBaby()">Löschen</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="readmeModal">
+        <div class="modal-content readme-modal">
+            <div class="modal-title">Muttermilch - Stillzeit Tracker</div>
+            <div class="readme-content">
+                <h2>📱 Was ist Muttermilch?</h2>
+                <p>Muttermilch ist eine <strong>kostenlose, webbasierte App</strong> zum Tracken von Stillzeiten. Die App hilft Eltern dabei, den Überblick über Stillgewohnheiten ihres Babys zu behalten und wichtige Muster zu erkennen.</p>
+
+                <h2>🔒 Datenschutz & Privatsphäre</h2>
+                <p><span class="highlight">Ihre Daten bleiben 100% privat!</span></p>
+                <ul>
+                    <li><strong>Lokale Speicherung:</strong> Alle Daten werden nur auf Ihrem Gerät gespeichert</li>
+                    <li><strong>Keine Übertragung:</strong> Es werden keine Daten an den Entwickler oder Dritte gesendet</li>
+                    <li><strong>Keine Registrierung:</strong> Kein Account oder persönliche Daten erforderlich</li>
+                </ul>
+
+                <h2>⚠️ Wichtiger Hinweis zu Datensicherheit</h2>
+                <p><strong>Ihre Daten können verloren gehen wenn:</strong></p>
+                <ul>
+                    <li>Browser-Daten gelöscht werden</li>
+                    <li>Browser-Cache geleert wird</li>
+                    <li>Gerät zurückgesetzt wird</li>
+                    <li>App neu installiert wird</li>
+                </ul>
+                <p><span class="highlight">Empfehlung:</span> Erstellen Sie regelmäßig ein Backup mit dem CSV-Export!</p>
+
+                <h2>💾 Backup & Datenübertragung</h2>
+                <h3>Backup erstellen:</h3>
+                <ul>
+                    <li>Klicken Sie auf <code>📤 CSV Export</code></li>
+                    <li>Speichern Sie die Datei an einem sicheren Ort</li>
+                    <li>Bei Bedarf mit <code>📥 CSV Import</code> wiederherstellen</li>
+                </ul>
+
+                <h3>Daten zwischen Geräten übertragen:</h3>
+                <ol>
+                    <li>Auf dem alten Gerät: CSV exportieren</li>
+                    <li>Datei auf das neue Gerät übertragen</li>
+                    <li>Auf dem neuen Gerät: CSV importieren</li>
+                </ol>
+
+                <h2>✏️ Handschriftliche Daten importieren</h2>
+                <p>Sie können auch handschriftlich erfasste Stillzeiten nachträglich importieren:</p>
+
+                <h3>Schritt 1: CSV-Datei erstellen</h3>
+                <p>Erstellen Sie eine Textdatei mit der Endung <code>.csv</code> (z.B. <code>meine_daten.csv</code>)</p>
+
+                <h3>Schritt 2: Daten im CSV-Format eingeben</h3>
+                <div class="code-block">"Baby","Brust","Startdatum","Startzeit","Enddatum","Endzeit","Dauer (Minuten)"
+"Emma","Links","04.06.2025","08:00","04.06.2025","08:15","15"
+"Emma","Rechts","04.06.2025","08:17","04.06.2025","08:30","13"
+"Emma","Links","04.06.2025","11:30","04.06.2025","11:45","15"</div>
+
+                <h3>Wichtige Format-Regeln:</h3>
+                <ul>
+                    <li><strong>Brust:</strong> "Links" oder "Rechts"</li>
+                    <li><strong>Datum:</strong> TT.MM.JJJJ (z.B. 04.06.2025)</li>
+                    <li><strong>Zeit:</strong> HH:MM (z.B. 08:00)</li>
+                    <li><strong>Dauer:</strong> Optional - wird automatisch berechnet wenn nicht angegeben</li>
+                    <li><strong>Anführungszeichen:</strong> Jedes Feld in " " setzen</li>
+                    <li><strong>Trennung:</strong> Felder mit Komma trennen</li>
+                </ul>
+
+                <h3>Schritt 3: Datei importieren</h3>
+                <p>Klicken Sie auf <code>📥 CSV Import</code> und wählen Sie Ihre Datei aus.</p>
+
+                <h2>🎯 Funktionen</h2>
+                <ul>
+                    <li><strong>Live-Timer:</strong> Echtzeiterfassung der Stillzeiten</li>
+                    <li><strong>Beide Brüste:</strong> Automatische Erkennung von Seitenwechseln</li>
+                    <li><strong>Multi-Baby Support:</strong> Mehrere Babys verwalten</li>
+                    <li><strong>Tages-Statistiken:</strong> Durchschnitte, Min/Max-Werte</li>
+                    <li><strong>Intelligente Gruppierung:</strong> Sessions < 10 Min werden kombiniert</li>
+                    <li><strong>CSV Export/Import:</strong> Daten sichern und übertragen</li>
+                </ul>
+
+                <h2>🌐 Installation</h2>
+                <p>Die App kann als <strong>Progressive Web App (PWA)</strong> installiert werden:</p>
+                <ol>
+                    <li>Chrome öffnen und zur App navigieren</li>
+                    <li>Drei Punkte → "Zum Startbildschirm hinzufügen"</li>
+                    <li>App erscheint wie eine native App auf dem Homescreen</li>
+                </ol>
+
+                <h2>💡 Tipps</h2>
+                <ul>
+                    <li>Exportieren Sie wöchentlich ein Backup</li>
+                    <li>Nutzen Sie aussagekräftige Baby-Namen</li>
+                    <li>Die "Zuletzt angelegt" Info hilft beim Seitenwechsel</li>
+                    <li>Tages-Statistiken zeigen Entwicklung der Stillgewohnheiten</li>
+                </ul>
+
+                <h2>🆓 Open Source</h2>
+                <p>Diese App ist kostenlos und werbefrei. Der Quellcode ist verfügbar und kann frei verwendet werden.</p>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="closeReadme()">Schließen</button>
             </div>
         </div>
     </div>
@@ -485,6 +678,7 @@
         window.addEventListener('load', async () => {
             loadLocalData();
             updateUI();
+            setInterval(updateUI, 60000);
         });
 
         // Lokale Daten laden
@@ -493,7 +687,6 @@
                 const savedSessions = localStorage.getItem('breastfeedingSessions');
                 if (savedSessions) {
                     const parsedSessions = JSON.parse(savedSessions);
-                    // Date-Objekte wiederherstellen
                     sessions = parsedSessions.map(session => ({
                         ...session,
                         startTime: new Date(session.startTime),
@@ -511,8 +704,6 @@
                     currentBaby = savedCurrentBaby;
                 }
             } catch (error) {
-                console.log('localStorage not available, using memory storage only');
-                // Bei Fehlern Standardwerte verwenden
                 sessions = [];
                 babies = ['Baby'];
                 currentBaby = 'Baby';
@@ -547,7 +738,7 @@
             try {
                 localStorage.setItem('babies', JSON.stringify(babies));
             } catch (error) {
-                console.log('localStorage not available');
+                // Silent fail
             }
             updateBabySelect();
             closeBabyModal();
@@ -558,9 +749,71 @@
             try {
                 localStorage.setItem('currentBaby', currentBaby);
             } catch (error) {
-                console.log('localStorage not available');
+                // Silent fail
             }
             updateUI();
+        };
+
+        // Baby umbenennen Funktionen
+        window.openRenameBabyModal = () => {
+            document.getElementById('currentBabyName').textContent = currentBaby;
+            document.getElementById('newBabyNameInput').value = currentBaby;
+            document.getElementById('renameBabyModal').style.display = 'block';
+        };
+
+        window.closeRenameBabyModal = () => {
+            document.getElementById('renameBabyModal').style.display = 'none';
+        };
+
+        window.renameBaby = () => {
+            const newName = document.getElementById('newBabyNameInput').value.trim();
+            if (!newName) {
+                alert('Bitte einen Namen eingeben');
+                return;
+            }
+
+            if (babies.includes(newName) && newName !== currentBaby) {
+                alert('Ein Baby mit diesem Namen existiert bereits');
+                return;
+            }
+
+            const oldName = currentBaby;
+            
+            // Baby-Name in der Liste aktualisieren
+            const babyIndex = babies.indexOf(oldName);
+            if (babyIndex !== -1) {
+                babies[babyIndex] = newName;
+            }
+            
+            // Alle Sessions des Babys umbenennen
+            sessions.forEach(session => {
+                if (session.baby === oldName) {
+                    session.baby = newName;
+                }
+            });
+            
+            // Aktuelles Baby aktualisieren
+            currentBaby = newName;
+            
+            // Speichern
+            try {
+                const sessionsToSave = sessions.map(session => ({
+                    ...session,
+                    startTime: session.startTime.toISOString(),
+                    endTime: session.endTime.toISOString()
+                }));
+                localStorage.setItem('breastfeedingSessions', JSON.stringify(sessionsToSave));
+                localStorage.setItem('babies', JSON.stringify(babies));
+                localStorage.setItem('currentBaby', currentBaby);
+            } catch (error) {
+                // Silent fail
+            }
+            
+            updateBabySelect();
+            updateUI();
+            closeRenameBabyModal();
+            
+            alert(`Baby "${oldName}" wurde zu "${newName}" umbenannt.`);
         };
 
         // Baby löschen Funktionen
@@ -587,7 +840,6 @@
             }
             
             try {
-                // Sessions mit Date-Serialisierung speichern
                 const sessionsToSave = sessions.map(session => ({
                     ...session,
                     startTime: session.startTime.toISOString(),
@@ -597,7 +849,7 @@
                 localStorage.setItem('babies', JSON.stringify(babies));
                 localStorage.setItem('currentBaby', currentBaby);
             } catch (error) {
-                console.log('localStorage not available');
+                // Silent fail
             }
             
             updateBabySelect();
@@ -609,8 +861,6 @@
 
         // Stillzeiten-Tracking
         window.toggleBreastfeeding = (breast) => {
-            console.log('Toggle breastfeeding:', breast, 'Current session:', currentSession);
-            
             if (currentSession && currentSession.breast === breast) {
                 stopBreastfeeding();
             } else if (!currentSession) {
@@ -619,7 +869,6 @@
         };
 
         function startBreastfeeding(breast) {
-            console.log('Starting breastfeeding:', breast);
             currentSession = {
                 baby: currentBaby,
                 breast: breast,
@@ -628,22 +877,24 @@
             };
 
             currentTimer = setInterval(updateCurrentSessionDisplay, 1000);
-            
             updateUI();
         }
 
         async function stopBreastfeeding() {
             if (!currentSession) return;
-            
-            console.log('Stopping breastfeeding');
 
             currentSession.endTime = new Date();
             sessions.unshift({...currentSession});
             
             try {
-                localStorage.setItem('breastfeedingSessions', JSON.stringify(sessions));
+                const sessionsToSave = sessions.map(session => ({
+                    ...session,
+                    startTime: session.startTime.toISOString(),
+                    endTime: session.endTime.toISOString()
+                }));
+                localStorage.setItem('breastfeedingSessions', JSON.stringify(sessionsToSave));
             } catch (error) {
-                console.log('localStorage not available, data stored in memory only');
+                // Silent fail
             }
 
             currentSession = null;
@@ -709,26 +960,17 @@
             const container = document.getElementById('sessionsList');
             
             if (sessions.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        Noch keine Stillzeiten erfasst
-                    </div>
-                `;
+                container.innerHTML = `<div class="empty-state">Noch keine Stillzeiten erfasst</div>`;
                 return;
             }
 
             const filteredSessions = sessions.filter(session => session.baby === currentBaby);
             
             if (filteredSessions.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        Keine Stillzeiten für ${currentBaby} erfasst
-                    </div>
-                `;
+                container.innerHTML = `<div class="empty-state">Keine Stillzeiten für ${currentBaby} erfasst</div>`;
                 return;
             }
 
-            // Sessions nach Datum sortieren (neueste zuerst)
             const sortedSessions = [...filteredSessions].sort((a, b) => b.startTime - a.startTime);
             
             let lastBreastInfo = '';
@@ -736,10 +978,37 @@
                 const mostRecentSession = sortedSessions[0];
                 const lastBreast = mostRecentSession.breast === 'left' ? 'Links' : 'Rechts';
                 const breastClass = mostRecentSession.breast === 'left' ? 'left' : 'right';
-                lastBreastInfo = `<div class="last-breast-info ${breastClass}">Zuletzt angelegt: ${lastBreast}</div>`;
+                
+                const now = new Date();
+                const timeSince = (now - mostRecentSession.endTime) / 1000 / 60;
+                
+                let timeText = '';
+                if (timeSince < 1) {
+                    timeText = ', gerade eben';
+                } else if (timeSince < 60) {
+                    const minutes = Math.floor(timeSince);
+                    timeText = `, vor ${minutes}min`;
+                } else if (timeSince < 1440) {
+                    const hours = Math.floor(timeSince / 60);
+                    const minutes = Math.floor(timeSince % 60);
+                    if (minutes === 0) {
+                        timeText = `, vor ${hours}h`;
+                    } else {
+                        timeText = `, vor ${hours}h ${minutes}min`;
+                    }
+                } else {
+                    const days = Math.floor(timeSince / 1440);
+                    const hours = Math.floor((timeSince % 1440) / 60);
+                    if (hours === 0) {
+                        timeText = `, vor ${days} Tag${days > 1 ? 'en' : ''}`;
+                    } else {
+                        timeText = `, vor ${days} Tag${days > 1 ? 'en' : ''} ${hours}h`;
+                    }
+                }
+                
+                lastBreastInfo = `<div class="last-breast-info ${breastClass}">Zuletzt angelegt: ${lastBreast}${timeText}</div>`;
             }
             
-            // Sessions zu kombinierten Stillzeiten gruppieren (weniger als 10 Minuten Abstand)
             const combinedSessions = [];
             const processedIndices = new Set();
             
@@ -755,25 +1024,21 @@
                     breasts: [session.breast]
                 };
 
-                // Suche nach nahen Sessions (sowohl frühere als auch spätere)
                 for (let j = 0; j < sortedSessions.length; j++) {
                     if (i === j || processedIndices.has(j)) continue;
                     
                     const otherSession = sortedSessions[j];
                     
-                    // Prüfe Zeitabstand in beide Richtungen
                     const timeDiffStart = Math.abs(combinedSession.startTime - otherSession.endTime) / 1000 / 60;
                     const timeDiffEnd = Math.abs(combinedSession.endTime - otherSession.startTime) / 1000 / 60;
                     const minTimeDiff = Math.min(timeDiffStart, timeDiffEnd);
                     
                     if (minTimeDiff < 10) {
-                        // Session zur kombinierten Session hinzufügen
                         combinedSession.sessions.push(otherSession);
                         combinedSession.breasts.push(otherSession.breast);
                         combinedSession.startTime = new Date(Math.min(combinedSession.startTime, otherSession.startTime));
                         combinedSession.endTime = new Date(Math.max(combinedSession.endTime, otherSession.endTime));
                         
-                        // Index als verarbeitet markieren
                         processedIndices.add(j);
                     }
                 }
@@ -782,7 +1047,6 @@
                 combinedSessions.push(combinedSession);
             }
             
-            // Kombinierte Sessions nach Startzeit sortieren (neueste zuerst)
             combinedSessions.sort((a, b) => b.startTime - a.startTime);
 
             let sessionsHtml = '';
@@ -792,25 +1056,26 @@
                 const combinedSession = combinedSessions[i];
                 const sessionDate = combinedSession.startTime.toLocaleDateString('de-DE');
                 
-                // Prüfen ob neuer Tag beginnt
                 if (currentDay !== sessionDate) {
-                    // Tages-Zusammenfassung basierend auf kombinierten Sessions erstellen
                     const dayCombinedSessions = combinedSessions.filter(session => 
                         session.startTime.toLocaleDateString('de-DE') === sessionDate
                     );
                     
                     const daySessionsCount = dayCombinedSessions.length;
-                    const totalDayDuration = dayCombinedSessions.reduce((sum, session) => 
-                        sum + Math.floor((session.endTime - session.startTime) / 1000 / 60), 0
-                    );
+                    
+                    const totalDayDuration = dayCombinedSessions.reduce((sum, combinedSession) => {
+                        const sessionSum = combinedSession.sessions.reduce((sessionTotal, session) => 
+                            sessionTotal + Math.floor((session.endTime - session.startTime) / 1000 / 60), 0
+                        );
+                        return sum + sessionSum;
+                    }, 0);
+                    
                     const avgDuration = Math.round(totalDayDuration / daySessionsCount);
                     
-                    // Durchschnittlicher Abstand zwischen kombinierten Stillzeiten berechnen
                     let avgInterval = 0;
+                    
                     if (dayCombinedSessions.length > 1) {
-                        // Kombinierte Sessions des Tages nach Zeit sortieren (älteste zuerst)
                         const sortedDaySessions = [...dayCombinedSessions].sort((a, b) => a.startTime - b.startTime);
-                        
                         let totalIntervals = 0;
                         let intervalCount = 0;
                         
@@ -837,19 +1102,23 @@
                         year: 'numeric'
                     });
                     
-                    let intervalText = '';
-                    if (avgInterval > 0) {
-                        if (avgInterval >= 60) {
-                            const hours = Math.floor(avgInterval / 60);
-                            const minutes = avgInterval % 60;
-                            if (minutes === 0) {
-                                intervalText = ` • ⌀ ${hours}h Abstand`;
+                    function formatInterval(minutes) {
+                        if (minutes >= 60) {
+                            const hours = Math.floor(minutes / 60);
+                            const mins = minutes % 60;
+                            if (mins === 0) {
+                                return `${hours}h`;
                             } else {
-                                intervalText = ` • ⌀ ${hours}h ${minutes}min Abstand`;
+                                return `${hours}h ${mins}min`;
                             }
                         } else {
-                            intervalText = ` • ⌀ ${avgInterval}min Abstand`;
+                            return `${minutes}min`;
                         }
+                    }
+                    
+                    let intervalText = '';
+                    if (avgInterval > 0) {
+                        intervalText = ` • ⌀ ${formatInterval(avgInterval)} Abstand`;
                     }
                     
                     sessionsHtml += `
@@ -862,7 +1131,10 @@
                     currentDay = sessionDate;
                 }
                 
-                const duration = Math.floor((combinedSession.endTime - combinedSession.startTime) / 1000 / 60);
+                const duration = combinedSession.sessions.reduce((total, session) => 
+                    total + Math.floor((session.endTime - session.startTime) / 1000 / 60), 0
+                );
+                
                 const startTime = combinedSession.startTime.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'});
                 const endTime = combinedSession.endTime.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'});
                 const date = combinedSession.startTime.toLocaleDateString('de-DE');
@@ -898,7 +1170,6 @@
                     const nextSession = combinedSessions[i + 1];
                     const nextSessionDate = nextSession.startTime.toLocaleDateString('de-DE');
                     
-                    // Nur Zeit zwischen Sessions anzeigen wenn am gleichen Tag
                     if (sessionDate === nextSessionDate) {
                         const timeBetween = (combinedSession.startTime - nextSession.endTime) / 1000 / 60 / 60;
                         
@@ -907,19 +1178,18 @@
                                 const hours = Math.floor(timeBetween);
                                 const minutes = Math.round((timeBetween - hours) * 60);
                                 if (minutes === 0) {
-                                    timeBetweenText = `<div style="text-align: center; color: #666; font-size: 12px; margin: 10px 0; font-style: italic;">↓ ${hours}h später ↓</div>`;
+                                    timeBetweenText = `<div style="text-align: center; color: #666; font-size: 12px; margin: 10px 0; font-weight: bold;">↓ ${hours}h später ↓</div>`;
                                 } else {
-                                    timeBetweenText = `<div style="text-align: center; color: #666; font-size: 12px; margin: 10px 0; font-style: italic;">↓ ${hours}h ${minutes}min später ↓</div>`;
+                                    timeBetweenText = `<div style="text-align: center; color: #666; font-size: 12px; margin: 10px 0; font-weight: bold;">↓ ${hours}h ${minutes}min später ↓</div>`;
                                 }
                             } else {
                                 const minutes = Math.round(timeBetween * 60);
-                                timeBetweenText = `<div style="text-align: center; color: #666; font-size: 12px; margin: 10px 0; font-style: italic;">↓ ${minutes}min später ↓</div>`;
+                                timeBetweenText = `<div style="text-align: center; color: #666; font-size: 12px; margin: 10px 0; font-weight: bold;">↓ ${minutes}min später ↓</div>`;
                             }
                         }
                     }
                 }
                 
-                // CSS-Klasse für Sessions bestimmen
                 let sessionClass = '';
                 if (uniqueBreasts.length === 2) {
                     sessionClass = 'both-breasts';
@@ -950,7 +1220,7 @@
             ).join('');
         }
 
-        // CSV Export/Import Funktionen
+        // CSV Export/Import
         window.exportToCSV = () => {
             if (sessions.length === 0) {
                 alert('Keine Daten zum Exportieren vorhanden');
@@ -1037,7 +1307,6 @@
                         const startTime = fields[startTimeIndex] || '';
 
                         if (!startDate || !startTime) {
-                            console.warn(`Zeile ${i + 2}: Fehlende Start-Daten`);
                             errorsCount++;
                             continue;
                         }
@@ -1056,7 +1325,6 @@
                         }
 
                         if (!startDateTime || isNaN(startDateTime.getTime())) {
-                            console.warn(`Zeile ${i + 2}: Ungültiges Startdatum/zeit: ${startDate} ${startTime}`);
                             errorsCount++;
                             continue;
                         }
@@ -1100,7 +1368,6 @@
                         importedBabies.add(baby);
 
                     } catch (error) {
-                        console.error(`Fehler in Zeile ${i + 2}:`, error);
                         errorsCount++;
                     }
                 }
@@ -1127,7 +1394,6 @@
                 babies = Array.from(importedBabies);
                 
                 try {
-                    // Sessions mit Date-Serialisierung speichern
                     const sessionsToSave = sessions.map(session => ({
                         ...session,
                         startTime: session.startTime.toISOString(),
@@ -1136,7 +1402,7 @@
                     localStorage.setItem('breastfeedingSessions', JSON.stringify(sessionsToSave));
                     localStorage.setItem('babies', JSON.stringify(babies));
                 } catch (error) {
-                    console.log('localStorage not available');
+                    // Silent fail
                 }
 
                 updateBabySelect();
@@ -1146,17 +1412,25 @@
                 let message = `${newSessionsCount} neue Stillzeiten erfolgreich importiert!\nInsgesamt: ${sessions.length} Einträge`;
                 
                 if (errorsCount > 0) {
-                    message += `\n${errorsCount} Zeilen konnten nicht importiert werden (siehe Konsole für Details)`;
+                    message += `\n${errorsCount} Zeilen konnten nicht importiert werden`;
                 }
 
                 alert(message);
 
             } catch (error) {
-                console.error('Import error:', error);
                 alert('Fehler beim Importieren der CSV-Datei. Bitte Format überprüfen.');
             }
 
             event.target.value = '';
+        };
+
+        // Readme Modal
+        window.showReadme = () => {
+            document.getElementById('readmeModal').style.display = 'block';
+        };
+
+        window.closeReadme = () => {
+            document.getElementById('readmeModal').style.display = 'none';
         };
 
         // Modal close on outside click
