@@ -659,6 +659,50 @@
         </div>
     </div>
 
+    <!-- Allgemeine Nachrichtenmodals -->
+    <div class="modal" id="errorModal">
+        <div class="modal-content">
+            <div class="modal-title">❌ Fehler</div>
+            <p id="errorMessage">Fehlermeldung</p>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="closeErrorModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="modal-title">✅ Erfolgreich</div>
+            <p id="successMessage">Erfolgsmeldung</p>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="closeSuccessModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <div class="modal-title">❓ Bestätigung</div>
+            <p id="confirmMessage">Bestätigungsnachricht</p>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeConfirmModal()">Abbrechen</button>
+                <button class="btn btn-primary" id="confirmButton" onclick="">Bestätigen</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="deleteSessionModal">
+        <div class="modal-content">
+            <div class="modal-title">Stillzeit löschen</div>
+            <p>Möchten Sie diese Stillzeit wirklich löschen?</p>
+            <p style="color: #d63031; font-weight: 600; margin-top: 15px;">⚠️ Diese Aktion kann nicht rückgängig gemacht werden!</p>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeDeleteSessionModal()">Abbrechen</button>
+                <button class="btn" style="background: #d63031; color: white;" id="deleteSessionButton">Löschen</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal" id="readmeModal">
         <div class="modal-content readme-modal">
             <div class="modal-title">Muttermilch - Stillzeit Tracker</div>
@@ -839,12 +883,12 @@
         window.addBaby = () => {
             const name = document.getElementById('babyNameInput').value.trim();
             if (!name) {
-                alert('Bitte einen Namen eingeben');
+                showError('Bitte einen Namen eingeben');
                 return;
             }
 
             if (babies.includes(name)) {
-                alert('Dieses Baby existiert bereits');
+                showError('Dieses Baby existiert bereits');
                 return;
             }
 
@@ -882,12 +926,12 @@
         window.renameBaby = () => {
             const newName = document.getElementById('newBabyNameInput').value.trim();
             if (!newName) {
-                alert('Bitte einen Namen eingeben');
+                showError('Bitte einen Namen eingeben');
                 return;
             }
 
             if (babies.includes(newName) && newName !== currentBaby) {
-                alert('Ein Baby mit diesem Namen existiert bereits');
+                showError('Ein Baby mit diesem Namen existiert bereits');
                 return;
             }
 
@@ -926,8 +970,6 @@
             updateBabySelect();
             updateUI();
             closeRenameBabyModal();
-            
-            alert(`Baby "${oldName}" wurde zu "${newName}" umbenannt.`);
         };
 
         // Baby löschen Funktionen
@@ -969,8 +1011,6 @@
             updateBabySelect();
             updateUI();
             closeDeleteConfirmModal();
-            
-            alert(`Baby "${babyToDelete}" und alle dazugehörigen Daten wurden gelöscht.`);
         };
 
         // Stillzeiten-Tracking
@@ -1343,7 +1383,7 @@
         // CSV Export/Import
         window.exportToCSV = () => {
             if (sessions.length === 0) {
-                alert('Keine Daten zum Exportieren vorhanden');
+                showError('Keine Daten zum Exportieren vorhanden');
                 return;
             }
 
@@ -1374,7 +1414,7 @@
             link.click();
             document.body.removeChild(link);
             
-            alert(`${sessions.length} Stillzeiten erfolgreich als CSV exportiert!`);
+            showSuccess(`${sessions.length} Stillzeiten erfolgreich als CSV exportiert!`);
         };
 
         window.importFromCSV = async (event) => {
@@ -1386,7 +1426,7 @@
                 const lines = text.split('\n').filter(line => line.trim());
                 
                 if (lines.length < 2) {
-                    alert('CSV-Datei ist leer oder ungültig');
+                    showError('CSV-Datei ist leer oder ungültig');
                     return;
                 }
 
@@ -1403,7 +1443,7 @@
                 const endTimeIndex = headers.findIndex(h => h.includes('endzeit') || h.includes('end') && h.includes('zeit'));
 
                 if (babyIndex === -1 || breastIndex === -1 || startDateIndex === -1 || startTimeIndex === -1) {
-                    alert('CSV-Format ungültig. Benötigte Spalten: Baby, Brust, Startdatum, Startzeit');
+                    showError('CSV-Format ungültig. Benötigte Spalten: Baby, Brust, Startdatum, Startzeit');
                     return;
                 }
 
@@ -1493,7 +1533,7 @@
                 }
 
                 if (importedSessions.length === 0) {
-                    alert(`Keine gültigen Daten importiert. ${errorsCount} Zeilen enthielten Fehler.`);
+                    showError(`Keine gültigen Daten importiert. ${errorsCount} Zeilen enthielten Fehler.`);
                     return;
                 }
 
@@ -1535,10 +1575,10 @@
                     message += `\n${errorsCount} Zeilen konnten nicht importiert werden`;
                 }
 
-                alert(message);
+                showSuccess(message);
 
             } catch (error) {
-                alert('Fehler beim Importieren der CSV-Datei. Bitte Format überprüfen.');
+                showError('Fehler beim Importieren der CSV-Datei. Bitte Format überprüfen.');
             }
 
             event.target.value = '';
@@ -1643,9 +1683,12 @@
         };
 
         window.deleteSessionConfirm = (sessionId) => {
-            if (confirm('Möchten Sie diese Stillzeit wirklich löschen?')) {
-                deleteSession(sessionId);
-            }
+            currentSessionToDelete = sessionId;
+            document.getElementById('deleteSessionButton').onclick = () => {
+                deleteSession(currentSessionToDelete);
+                closeDeleteSessionModal();
+            };
+            document.getElementById('deleteSessionModal').style.display = 'block';
         };
 
         function deleteSession(sessionId) {
@@ -1706,7 +1749,7 @@
 
                 // Validierung
                 if (newStartTime >= newEndTime) {
-                    alert('Endzeit muss nach der Startzeit liegen!');
+                    showError('Endzeit muss nach der Startzeit liegen!');
                     return;
                 }
 
@@ -1757,6 +1800,45 @@
                 e.target.style.display = 'none';
             }
         });
+
+        // Allgemeine Modal-Funktionen
+        function showError(message) {
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('errorModal').style.display = 'block';
+        }
+
+        window.closeErrorModal = () => {
+            document.getElementById('errorModal').style.display = 'none';
+        };
+
+        function showSuccess(message) {
+            document.getElementById('successMessage').textContent = message;
+            document.getElementById('successModal').style.display = 'block';
+        }
+
+        window.closeSuccessModal = () => {
+            document.getElementById('successModal').style.display = 'none';
+        };
+
+        function showConfirm(message, onConfirm) {
+            document.getElementById('confirmMessage').textContent = message;
+            document.getElementById('confirmButton').onclick = () => {
+                closeConfirmModal();
+                onConfirm();
+            };
+            document.getElementById('confirmModal').style.display = 'block';
+        }
+
+        window.closeConfirmModal = () => {
+            document.getElementById('confirmModal').style.display = 'none';
+        };
+
+        let currentSessionToDelete = null;
+
+        window.closeDeleteSessionModal = () => {
+            document.getElementById('deleteSessionModal').style.display = 'none';
+            currentSessionToDelete = null;
+        };
     </script>
 </body>
 </html>
