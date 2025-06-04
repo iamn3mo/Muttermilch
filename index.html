@@ -200,6 +200,7 @@
             margin-bottom: 10px;
             border-left: 4px solid #667eea;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .session-entry:hover {
@@ -489,6 +490,57 @@
             padding: 2px 4px;
             border-radius: 3px;
         }
+
+        .session-modal .modal-content {
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .single-session-edit {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .single-session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
@@ -576,6 +628,19 @@
         </div>
     </div>
 
+    <div class="modal session-modal" id="sessionModal">
+        <div class="modal-content">
+            <div class="modal-title">Stillzeiten bearbeiten</div>
+            <div id="sessionEditContent">
+                <!-- Wird dynamisch gefüllt -->
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeSessionModal()">Abbrechen</button>
+                <button class="btn btn-primary" onclick="saveSessionChanges()">Speichern</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal" id="readmeModal">
         <div class="modal-content readme-modal">
             <div class="modal-title">Muttermilch - Stillzeit Tracker</div>
@@ -640,6 +705,27 @@
                 <h3>Schritt 3: Datei importieren</h3>
                 <p>Klicken Sie auf <code>📥 CSV Import</code> und wählen Sie Ihre Datei aus.</p>
 
+                <h2>✏️ Daten bearbeiten & korrigieren</h2>
+                <h3>Direkt in der App bearbeiten:</h3>
+                <ul>
+                    <li><strong>Stillzeiten anpassen:</strong> Klicken Sie auf eine Session im Stillverlauf</li>
+                    <li><strong>Einzelne Sessions:</strong> Ändern Sie Baby, Brust, Start- und Endzeit</li>
+                    <li><strong>Kombinierte Sessions:</strong> Bearbeiten Sie jede Einzelphase separat</li>
+                    <li><strong>Löschen:</strong> Entfernen Sie versehentlich erfasste Sessions</li>
+                    <li><strong>Baby-Management:</strong> Babys umbenennen oder löschen</li>
+                </ul>
+
+                <h3>CSV-Daten extern bearbeiten:</h3>
+                <ol>
+                    <li>Daten mit <code>📤 CSV Export</code> exportieren</li>
+                    <li>CSV-Datei mit Texteditor öffnen (z.B. Notepad, TextEdit)</li>
+                    <li>Daten nach Bedarf ändern (Format beachten!)</li>
+                    <li>Aktuelle App-Daten löschen</li>
+                    <li>Bearbeitete Datei mit <code>📥 CSV Import</code> reimportieren</li>
+                </ol>
+
+                <p><span class="highlight">Tipp:</span> Für größere Korrekturen ist die externe Bearbeitung oft schneller!</p>
+
                 <h2>🎯 Funktionen</h2>
                 <ul>
                     <li><strong>Live-Timer:</strong> Echtzeiterfassung der Stillzeiten</li>
@@ -682,6 +768,7 @@
         let babies = ['Baby'];
         let currentBaby = 'Baby';
         let currentTimer = null;
+        let combinedSessionsCache = [];
 
         // Initialize app
         window.addEventListener('load', async () => {
@@ -1060,6 +1147,9 @@
             }
             
             combinedSessions.sort((a, b) => b.startTime - a.startTime);
+            
+            // Cache für Session-Modals
+            combinedSessionsCache = combinedSessions;
 
             let sessionsHtml = '';
             let currentDay = null;
@@ -1210,7 +1300,7 @@
                 }
                 
                 sessionsHtml += `
-                    <div class="session-entry ${sessionClass}">
+                    <div class="session-entry ${sessionClass}" onclick="openSessionModal(${i})">
                         <div class="session-date">
                             ${breastText} • ${combinedSession.baby}
                         </div>
@@ -1443,6 +1533,202 @@
 
         window.closeReadme = () => {
             document.getElementById('readmeModal').style.display = 'none';
+        };
+
+        // Session Modal
+        window.openSessionModal = (sessionIndex) => {
+            const combinedSession = combinedSessionsCache[sessionIndex];
+            if (!combinedSession) return;
+
+            const content = document.getElementById('sessionEditContent');
+            let html = '';
+
+            if (combinedSession.sessions.length === 1) {
+                // Einzelne Session
+                const session = combinedSession.sessions[0];
+                html = createSingleSessionEditForm(session, 0, sessionIndex);
+            } else {
+                // Kombinierte Sessions
+                html = '<h3 style="margin-bottom: 15px;">Einzelne Stillzeiten in dieser kombinierten Session:</h3>';
+                combinedSession.sessions.forEach((session, index) => {
+                    html += createSingleSessionEditForm(session, index, sessionIndex);
+                });
+            }
+
+            content.innerHTML = html;
+            document.getElementById('sessionModal').style.display = 'block';
+        };
+
+        function createSingleSessionEditForm(session, subIndex, sessionIndex) {
+            const sessionId = `${sessionIndex}-${subIndex}`;
+            const startDate = session.startTime.toLocaleDateString('de-DE');
+            const startTime = session.startTime.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'});
+            const endDate = session.endTime.toLocaleDateString('de-DE');
+            const endTime = session.endTime.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'});
+            
+            const babyOptions = babies.map(baby => 
+                `<option value="${baby}" ${baby === session.baby ? 'selected' : ''}>${baby}</option>`
+            ).join('');
+
+            return `
+                <div class="single-session-edit">
+                    <div class="single-session-header">
+                        <span>${session.breast === 'left' ? 'Linke Brust' : 'Rechte Brust'} • ${session.baby}</span>
+                        <button class="btn btn-danger btn-small" onclick="deleteSessionConfirm('${sessionId}')">🗑️ Löschen</button>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Baby:</label>
+                            <select id="baby-${sessionId}">
+                                ${babyOptions}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Brust:</label>
+                            <select id="breast-${sessionId}">
+                                <option value="left" ${session.breast === 'left' ? 'selected' : ''}>Links</option>
+                                <option value="right" ${session.breast === 'right' ? 'selected' : ''}>Rechts</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Startdatum:</label>
+                            <input type="date" id="startDate-${sessionId}" value="${session.startTime.toISOString().split('T')[0]}">
+                        </div>
+                        <div class="form-group">
+                            <label>Startzeit:</label>
+                            <input type="time" id="startTime-${sessionId}" value="${startTime}">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Enddatum:</label>
+                            <input type="date" id="endDate-${sessionId}" value="${session.endTime.toISOString().split('T')[0]}">
+                        </div>
+                        <div class="form-group">
+                            <label>Endzeit:</label>
+                            <input type="time" id="endTime-${sessionId}" value="${endTime}">
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.closeSessionModal = () => {
+            document.getElementById('sessionModal').style.display = 'none';
+        };
+
+        window.deleteSessionConfirm = (sessionId) => {
+            if (confirm('Möchten Sie diese Stillzeit wirklich löschen?')) {
+                deleteSession(sessionId);
+            }
+        };
+
+        function deleteSession(sessionId) {
+            const [sessionIndex, subIndex] = sessionId.split('-').map(Number);
+            const combinedSession = combinedSessionsCache[sessionIndex];
+            const sessionToDelete = combinedSession.sessions[subIndex];
+
+            // Session aus der Hauptliste entfernen
+            const sessionIndexInMain = sessions.findIndex(s => 
+                Math.abs(s.startTime - sessionToDelete.startTime) < 1000 &&
+                s.breast === sessionToDelete.breast &&
+                s.baby === sessionToDelete.baby
+            );
+
+            if (sessionIndexInMain !== -1) {
+                sessions.splice(sessionIndexInMain, 1);
+            }
+
+            // Speichern
+            try {
+                const sessionsToSave = sessions.map(session => ({
+                    ...session,
+                    startTime: session.startTime.toISOString(),
+                    endTime: session.endTime.toISOString()
+                }));
+                localStorage.setItem('breastfeedingSessions', JSON.stringify(sessionsToSave));
+            } catch (error) {
+                // Silent fail
+            }
+
+            updateUI();
+            closeSessionModal();
+        }
+
+        window.saveSessionChanges = () => {
+            const editForms = document.querySelectorAll('.single-session-edit');
+            let hasChanges = false;
+
+            editForms.forEach((form, index) => {
+                const sessionIdElements = form.querySelectorAll('[id]');
+                if (sessionIdElements.length === 0) return;
+
+                const sessionId = sessionIdElements[0].id.split('-').slice(1).join('-');
+                const [sessionIndex, subIndex] = sessionId.split('-').map(Number);
+                const combinedSession = combinedSessionsCache[sessionIndex];
+                const originalSession = combinedSession.sessions[subIndex];
+
+                // Neue Werte sammeln
+                const baby = document.getElementById(`baby-${sessionId}`).value;
+                const breast = document.getElementById(`breast-${sessionId}`).value;
+                const startDate = document.getElementById(`startDate-${sessionId}`).value;
+                const startTime = document.getElementById(`startTime-${sessionId}`).value;
+                const endDate = document.getElementById(`endDate-${sessionId}`).value;
+                const endTime = document.getElementById(`endTime-${sessionId}`).value;
+
+                const newStartTime = new Date(`${startDate}T${startTime}`);
+                const newEndTime = new Date(`${endDate}T${endTime}`);
+
+                // Validierung
+                if (newStartTime >= newEndTime) {
+                    alert('Endzeit muss nach der Startzeit liegen!');
+                    return;
+                }
+
+                // Session in der Hauptliste finden und aktualisieren
+                const sessionIndexInMain = sessions.findIndex(s => 
+                    Math.abs(s.startTime - originalSession.startTime) < 1000 &&
+                    s.breast === originalSession.breast &&
+                    s.baby === originalSession.baby
+                );
+
+                if (sessionIndexInMain !== -1) {
+                    sessions[sessionIndexInMain] = {
+                        ...sessions[sessionIndexInMain],
+                        baby,
+                        breast,
+                        startTime: newStartTime,
+                        endTime: newEndTime
+                    };
+                    hasChanges = true;
+                }
+            });
+
+            if (hasChanges) {
+                // Sortieren nach Datum
+                sessions.sort((a, b) => b.startTime - a.startTime);
+
+                // Speichern
+                try {
+                    const sessionsToSave = sessions.map(session => ({
+                        ...session,
+                        startTime: session.startTime.toISOString(),
+                        endTime: session.endTime.toISOString()
+                    }));
+                    localStorage.setItem('breastfeedingSessions', JSON.stringify(sessionsToSave));
+                } catch (error) {
+                    // Silent fail
+                }
+
+                updateUI();
+            }
+
+            closeSessionModal();
         };
 
         // Modal close on outside click
