@@ -92,9 +92,19 @@
 
         .breast-buttons {
             display: flex;
+            flex-direction: column;
             gap: 15px;
             padding: 20px;
             background: #f8f9fa;
+        }
+
+        .breast-buttons-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .breast-buttons > *:empty {
+            display: none;
         }
 
         .breast-btn {
@@ -172,11 +182,9 @@
         }
 
         .current-session {
-            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
             color: white;
             padding: 15px;
             border-radius: 12px;
-            margin-bottom: 20px;
             text-align: center;
         }
 
@@ -269,11 +277,8 @@
             position: absolute;
             bottom: 8px;
             right: 10px;
-            font-size: 12px;
-            background: #f8f9fa;
+            font-size: 16px;
             color: #666;
-            border: 1px solid #e9ecef;
-            border-radius: 50%;
             width: 20px;
             height: 20px;
             display: flex;
@@ -285,23 +290,19 @@
         }
 
         .session-entry:hover .session-edit-icon {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
+            color: #667eea;
         }
 
         .session-entry.right-breast:hover .session-edit-icon {
-            background: #f093fb;
-            border-color: #f093fb;
+            color: #f275b4;
         }
 
         .session-entry.both-breasts:hover .session-edit-icon {
-            background: #20bf6b;
-            border-color: #20bf6b;
+            color: #20bf6b;
         }
 
         .session-entry.right-breast {
-            border-left-color: #f093fb;
+            border-left-color: #f275b4;
         }
 
         .session-entry.both-breasts {
@@ -321,10 +322,18 @@
         }
 
         .session-duration {
-            color: #28a745;
+            color: #667eea;
             font-weight: 600;
             font-size: 14px;
             margin-top: 5px;
+        }
+
+        .session-entry.right-breast .session-duration {
+            color: #f275b4;
+        }
+
+        .session-entry.both-breasts .session-duration {
+            color: #20bf6b;
         }
 
         .baby-section {
@@ -731,16 +740,19 @@
         </div>
 
         <div class="breast-buttons">
-            <button class="breast-btn left" id="leftBreastBtn" onclick="toggleBreastfeeding('left')">
-                Linke Brust
-            </button>
-            <button class="breast-btn right" id="rightBreastBtn" onclick="toggleBreastfeeding('right')">
-                Rechte Brust
-            </button>
+            <div class="breast-buttons-row">
+                <button class="breast-btn left" id="leftBreastBtn" onclick="toggleBreastfeeding('left')">
+                    Linke Brust
+                </button>
+                <button class="breast-btn right" id="rightBreastBtn" onclick="toggleBreastfeeding('right')">
+                    Rechte Brust
+                </button>
+            </div>
+            <div id="currentSession"></div>
+            <div id="lastBreastInfo"></div>
         </div>
 
         <div class="timeline">
-            <div id="currentSession"></div>
             <h3>Stillverlauf</h3>
             <div id="sessionsList">
                 <div class="empty-state">
@@ -972,8 +984,10 @@
                     <li><strong>Live-Timer:</strong> Echtzeiterfassung der Stillzeiten</li>
                     <li><strong>Beide Brüste:</strong> Automatische Erkennung von Seitenwechseln</li>
                     <li><strong>Multi-Baby Support:</strong> Mehrere Babys verwalten</li>
-                    <li><strong>Tages-Statistiken:</strong> Durchschnitte</li>
+                    <li><strong>Detaillierte Tagesstatistiken:</strong> Klick auf Tageszusammenfassung zeigt Min/⌀/Max-Werte für Dauer und Abstände, sowie Bruststatistiken</li>
                     <li><strong>Intelligente Gruppierung:</strong> Sessions < 10 Min werden kombiniert</li>
+                    <li><strong>Abstände über Tagesgrenzen:</strong> Nachtpausen zwischen Tagen werden dem neuen Tag zugerechnet</li>
+                    <li><strong>Session-Bearbeitung:</strong> Klick auf Stillzeiten ermöglicht nachträgliche Bearbeitung oder Löschung</li>
                     <li><strong>CSV Export/Import:</strong> Daten sichern und übertragen</li>
                 </ul>
 
@@ -1315,9 +1329,11 @@
 
         function updateSessionsList() {
             const container = document.getElementById('sessionsList');
+            const lastBreastInfoContainer = document.getElementById('lastBreastInfo');
             
             if (sessions.length === 0) {
                 container.innerHTML = `<div class="empty-state">Noch keine Stillzeiten erfasst</div>`;
+                lastBreastInfoContainer.innerHTML = '';
                 return;
             }
 
@@ -1325,6 +1341,7 @@
             
             if (filteredSessions.length === 0) {
                 container.innerHTML = `<div class="empty-state">Keine Stillzeiten für ${currentBaby} erfasst</div>`;
+                lastBreastInfoContainer.innerHTML = '';
                 return;
             }
 
@@ -1363,8 +1380,11 @@
                     }
                 }
                 
-                lastBreastInfo = `<div class="last-breast-info ${breastClass}">Zuletzt angelegt: ${lastBreast}${timeText}</div>`;
+                lastBreastInfo = `<div class="last-breast-info ${breastClass}">Zuvor angelegt: ${lastBreast}${timeText}</div>`;
             }
+            
+            // Setze die lastBreastInfo in das separate Container
+            lastBreastInfoContainer.innerHTML = lastBreastInfo;
             
             const combinedSessions = [];
             const processedIndices = new Set();
@@ -1646,7 +1666,7 @@
                 `;
             }
 
-            container.innerHTML = lastBreastInfo + sessionsHtml;
+            container.innerHTML = sessionsHtml;
         }
 
         function updateBabySelect() {
@@ -1858,6 +1878,25 @@
                 }
 
                 updateBabySelect();
+                
+                // Prüfe ob aktuelles Baby in importierten Daten enthalten ist
+                const currentBabyHasSessions = sessions.some(session => session.baby === currentBaby);
+                if (!currentBabyHasSessions && babies.length > 0) {
+                    // Wechsle zu einem Baby das Sessions hat
+                    const babyWithSessions = babies.find(baby => 
+                        sessions.some(session => session.baby === baby)
+                    );
+                    if (babyWithSessions) {
+                        currentBaby = babyWithSessions;
+                        try {
+                            localStorage.setItem('currentBaby', currentBaby);
+                        } catch (error) {
+                            // Silent fail
+                        }
+                        updateBabySelect();
+                    }
+                }
+                
                 updateUI();
 
                 const newSessionsCount = sessions.length - existingSessionsCount;
