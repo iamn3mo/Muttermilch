@@ -89,8 +89,9 @@ Klicken Sie auf `📥 CSV Import` und wählen Sie Ihre Datei aus.
 - **Live-Timer:** Echtzeiterfassung der Stillzeiten
 - **Beide Brüste:** Automatische Erkennung von Seitenwechseln
 - **Multi-Baby Support:** Mehrere Babys verwalten
-- **Tages-Statistiken:** Durchschnitte
+- **Detaillierte Tagesstatistiken:** Min/⌀/Max-Werte und Bruststatistiken
 - **Intelligente Gruppierung:** Sessions < 10 Min werden kombiniert
+- **Session-Bearbeitung:** Nachträgliche Bearbeitung möglich
 - **CSV Export/Import:** Daten sichern und übertragen
 
 ## 🌐 Installation als App
