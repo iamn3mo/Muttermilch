@@ -71,9 +71,9 @@
             font-size: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: linear-gradient(135deg, #20bf6b 0%, #01a3a4 100%);
+            background: rgba(255,255,255,0.2);
             color: white;
-            border: 2px solid white;
+            border: 1px solid rgba(255,255,255,0.4);
             border-radius: 50%;
             width: 24px;
             height: 24px;
@@ -86,7 +86,8 @@
 
         .info-icon:hover {
             transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.6);
         }
 
         .breast-buttons {
@@ -206,11 +207,35 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             cursor: pointer;
             transition: all 0.3s ease;
+            position: relative;
         }
 
         .day-summary:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .day-summary-icon {
+            position: absolute;
+            bottom: 8px;
+            right: 10px;
+            font-size: 12px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .day-summary:hover .day-summary-icon {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.6);
         }
 
         .day-summary-date {
@@ -232,11 +257,42 @@
             border-left: 4px solid #667eea;
             transition: all 0.3s ease;
             cursor: pointer;
+            position: relative;
         }
 
         .session-entry:hover {
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             transform: translateX(5px);
+        }
+
+        .session-edit-icon {
+            position: absolute;
+            bottom: 8px;
+            right: 10px;
+            font-size: 12px;
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #e9ecef;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            text-align: center;
+            line-height: 1;
+        }
+
+        .session-entry:hover .session-edit-icon {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .session-entry.right-breast:hover .session-edit-icon {
+            background: #f093fb;
+            border-color: #f093fb;
         }
 
         .session-entry.right-breast {
@@ -1479,6 +1535,7 @@
                         <div class="day-summary" onclick="openDayStatsModal('${sessionDate}')">
                             <div class="day-summary-date">${displayName}</div>
                             <div class="day-summary-stats">${daySessionsCount} Stillzeiten • ⌀ ${avgDuration} Min${intervalText}</div>
+                            <div class="day-summary-icon">i</div>
                         </div>
                     `;
                     
@@ -1578,6 +1635,7 @@
                         <div class="session-time">${date} • ${startTime} - ${endTime}</div>
                         <div class="session-duration">${duration} Minuten gesamt</div>
                         ${durationDetails}
+                        <div class="session-edit-icon">✏</div>
                     </div>
                     ${timeBetweenText}
                 `;
