@@ -92,7 +92,7 @@ Um die App schnell auszuprobieren, können Sie **vorgefertigte Beispieldaten** d
 
 1. **Beispieldaten herunterladen:** In der App auf den Link "beispiel_stilldaten.csv" im Hilfe-Bereich klicken
 2. **In die App importieren:** Klicken Sie auf `📥 CSV Import` und wählen Sie die heruntergeladene Datei
-3. **Testen:** Erkunden Sie alle Funktionen mit realistischen Daten
+3. **Testen:** Erkunden Sie alle Funktionen mit simulierten Daten
 
 **Perfekt zum Testen:** Die Beispieldaten zeigen alle App-Funktionen wie Tagesstatistiken, kombinierte Sessions und die verschiedenen Darstellungsformen!
 
