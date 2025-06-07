@@ -1598,7 +1598,7 @@
                         if (previousDaySessions.length > 0) {
                             const lastPreviousSession = previousDaySessions.sort((a, b) => b.startTime - a.startTime)[0];
                             const intervalToPrevious = (sortedDaySessions[0].startTime - lastPreviousSession.endTime) / 1000 / 60;
-                            if (intervalToPrevious > 10) {
+                            if (intervalToPrevious > 10 && intervalToPrevious <= 1440) {
                                 totalIntervals += intervalToPrevious;
                                 intervalCount++;
                             }
@@ -1610,8 +1610,8 @@
                             const nextSessionStart = sortedDaySessions[j + 1].startTime;
                             const intervalMinutes = (nextSessionStart - currentSessionEnd) / 1000 / 60;
                             
-                            // Nur Abstände > 10 Minuten berücksichtigen
-                            if (intervalMinutes > 10) {
+                            // Nur Abstände > 10 Minuten und <= 24h berücksichtigen
+                            if (intervalMinutes > 10 && intervalMinutes <= 1440) {
                                 totalIntervals += intervalMinutes;
                                 intervalCount++;
                             }
@@ -1633,7 +1633,7 @@
                         if (previousDaySessions.length > 0) {
                             const lastPreviousSession = previousDaySessions.sort((a, b) => b.startTime - a.startTime)[0];
                             const intervalToPrevious = (dayCombinedSessions[0].startTime - lastPreviousSession.endTime) / 1000 / 60;
-                            if (intervalToPrevious > 10) {
+                            if (intervalToPrevious > 10 && intervalToPrevious <= 1440) {
                                 avgInterval = Math.round(intervalToPrevious);
                             }
                         }
@@ -1792,13 +1792,13 @@
                                 const hours = Math.floor(timeBetween);
                                 const minutes = Math.round((timeBetween - hours) * 60);
                                 if (minutes === 0) {
-                                    timeBetweenText = `<div style="text-align: center; color: #666; font-size: 12px; margin: 10px 0; font-weight: bold;">↓ ${hours}h vorher ↓</div>`;
+                                    timeBetweenText = `<div style="text-align: center; color: #666; font-size: 12px; margin: 10px 0; font-weight: bold;">↓ ${hours}h ↓</div>`;
                                 } else {
-                                    timeBetweenText = `<div style="text-align: center; color: #666; font-size: 12px; margin: 10px 0; font-weight: bold;">↓ ${hours}h ${minutes}min vorher ↓</div>`;
+                                    timeBetweenText = `<div style="text-align: center; color: #666; font-size: 12px; margin: 10px 0; font-weight: bold;">↓ ${hours}h ${minutes}min ↓</div>`;
                                 }
                             } else {
                                 const minutes = Math.round(timeBetween * 60);
-                                timeBetweenText = `<div style="text-align: center; color: #666; font-size: 12px; margin: 10px 0; font-weight: bold;">↓ ${minutes}min vorher ↓</div>`;
+                                timeBetweenText = `<div style="text-align: center; color: #666; font-size: 12px; margin: 10px 0; font-weight: bold;">↓ ${minutes}min ↓</div>`;
                             }
                         }
                     }
@@ -2505,7 +2505,9 @@
                     if (previousCombinedSessions.length > 0) {
                         const lastPrevSession = previousCombinedSessions.sort((a, b) => b.startTime - a.startTime)[0];
                         const intervalToPrevious = (firstTodaySession.startTime - lastPrevSession.endTime) / 1000 / 60;
-                        intervals.push(intervalToPrevious);
+                        if (intervalToPrevious > 0 && intervalToPrevious <= 1440) {
+                            intervals.push(intervalToPrevious);
+                        }
                     }
                 }
             }
@@ -2513,7 +2515,9 @@
             // Abstände innerhalb des Tages zwischen kombinierten Sessions
             for (let i = 0; i < combinedSessions.length - 1; i++) {
                 const intervalMinutes = (combinedSessions[i + 1].startTime - combinedSessions[i].endTime) / 1000 / 60;
-                intervals.push(intervalMinutes);
+                if (intervalMinutes > 0 && intervalMinutes <= 1440) {
+                    intervals.push(intervalMinutes);
+                }
             }
 
             const minDuration = Math.min(...combinedDurations);
