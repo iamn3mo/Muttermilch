@@ -84,6 +84,18 @@ Klicken Sie auf `📥 CSV Import` und wählen Sie Ihre Datei aus.
 
 **Tipp:** Für größere Korrekturen ist die externe Bearbeitung oft schneller!
 
+## 📊 Beispieldaten zum Testen
+
+Um die App schnell auszuprobieren, können Sie **vorgefertigte Beispieldaten** direkt in der App herunterladen und importieren:
+
+### Download und Import:
+
+1. **Beispieldaten herunterladen:** In der App auf den Link "beispiel_stilldaten.csv" im Hilfe-Bereich klicken
+2. **In die App importieren:** Klicken Sie auf `📥 CSV Import` und wählen Sie die heruntergeladene Datei
+3. **Testen:** Erkunden Sie alle Funktionen mit realistischen Daten
+
+**Perfekt zum Testen:** Die Beispieldaten zeigen alle App-Funktionen wie Tagesstatistiken, kombinierte Sessions und die verschiedenen Darstellungsformen!
+
 ## 🎯 Funktionen
 
 - **Live-Timer:** Echtzeiterfassung der Stillzeiten
