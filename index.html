@@ -1062,6 +1062,18 @@
                     <li><strong>CSV Export/Import:</strong> Daten sichern und übertragen</li>
                 </ul>
 
+                <h2>📊 Beispieldaten zum Testen</h2>
+                <p>Um die App schnell auszuprobieren, können Sie <strong>vorgefertigte Beispieldaten</strong> herunterladen und importieren:</p>
+                
+                <h3>Download und Import:</h3>
+                <ol>
+                    <li><strong>Beispieldaten herunterladen:</strong> <a href="#" onclick="downloadSampleData(); return false;">beispiel_stilldaten.csv</a></li>
+                    <li><strong>In die App importieren:</strong> Klicken Sie auf <code>📥 CSV Import</code> und wählen Sie die heruntergeladene Datei</li>
+                    <li><strong>Testen:</strong> Erkunden Sie alle Funktionen mit realistischen Daten</li>
+                </ol>
+
+                <p><span class="highlight">Perfekt zum Testen:</span> Die Beispieldaten zeigen alle App-Funktionen wie Tagesstatistiken, kombinierte Sessions und die verschiedenen Darstellungsformen!</p>
+
                 <h2>🌐 Installation als App</h2>
                 <p>Die App kann als <strong>Progressive Web App (PWA)</strong> auf dem Startbildschirm installiert werden:</p>
                 
@@ -2592,6 +2604,46 @@
 
             document.getElementById('dayStatsContent').innerHTML = content;
             document.getElementById('dayStatsModal').style.display = 'block';
+        };
+
+        // Beispieldaten Download
+        window.downloadSampleData = () => {
+            const sampleCSV = `"Baby","Brust","Startdatum","Startzeit","Enddatum","Endzeit","Dauer (Minuten)"
+"Emma","Links","04.06.2025","07:00","04.06.2025","07:15","15"
+"Emma","Rechts","04.06.2025","07:18","04.06.2025","07:32","14"
+"Emma","Rechts","04.06.2025","10:30","04.06.2025","10:45","15"
+"Emma","Links","04.06.2025","13:15","04.06.2025","13:28","13"
+"Emma","Rechts","04.06.2025","13:32","04.06.2025","13:47","15"
+"Emma","Links","04.06.2025","16:45","04.06.2025","17:02","17"
+"Emma","Rechts","04.06.2025","20:30","04.06.2025","20:42","12"
+"Emma","Links","04.06.2025","23:15","04.06.2025","23:28","13"
+"Emma","Rechts","05.06.2025","02:45","05.06.2025","03:00","15"
+"Emma","Links","05.06.2025","06:30","05.06.2025","06:45","15"
+"Emma","Rechts","05.06.2025","06:48","05.06.2025","07:05","17"
+"Emma","Links","05.06.2025","09:45","05.06.2025","10:02","17"
+"Emma","Rechts","05.06.2025","12:30","05.06.2025","12:45","15"
+"Emma","Links","05.06.2025","12:49","05.06.2025","13:07","18"
+"Emma","Rechts","05.06.2025","16:15","05.06.2025","16:32","17"
+"Emma","Links","05.06.2025","19:45","05.06.2025","20:00","15"
+"Emma","Rechts","05.06.2025","22:30","05.06.2025","22:45","15"
+"Emma","Links","06.06.2025","01:15","06.06.2025","01:30","15"
+"Emma","Rechts","06.06.2025","05:45","06.06.2025","06:00","15"
+"Emma","Links","06.06.2025","06:04","06.06.2025","06:22","18"
+"Emma","Rechts","06.06.2025","09:15","06.06.2025","09:32","17"
+"Emma","Links","06.06.2025","12:45","06.06.2025","13:00","15"
+"Emma","Rechts","06.06.2025","13:05","06.06.2025","13:22","17"
+"Emma","Links","06.06.2025","17:00","06.06.2025","17:16","16"
+"Emma","Rechts","06.06.2025","20:15","06.06.2025","20:30","15"`;
+
+            const blob = new Blob(['\uFEFF' + sampleCSV], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'beispiel_stilldaten.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         };
 
         window.closeDayStatsModal = () => {
