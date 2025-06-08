@@ -26,9 +26,9 @@ Muttermilch ist eine **kostenlose, webbasierte App** zum Tracken von Stillzeiten
 
 ### Backup erstellen:
 
-- Klicken Sie auf `📤 CSV Export`
+- Klicken Sie auf `Export`
 - Speichern Sie die Datei an einem sicheren Ort
-- Bei Bedarf mit `📥 CSV Import` wiederherstellen
+- Bei Bedarf mit `Import` wiederherstellen
 
 ### Daten zwischen Geräten übertragen:
 
@@ -64,7 +64,7 @@ Erstellen Sie eine Textdatei mit der Endung `.CSV` (z.B. `meine_daten.CSV`)
 
 ### Schritt 3: Datei importieren
 
-Klicken Sie auf `📥 CSV Import` und wählen Sie Ihre Datei aus.
+Klicken Sie auf `Import` und wählen Sie Ihre Datei aus.
 
 ## ✏️ Daten bearbeiten & korrigieren
 
@@ -76,11 +76,11 @@ Klicken Sie auf `📥 CSV Import` und wählen Sie Ihre Datei aus.
 - **Baby-Management:** Babys umbenennen oder löschen
 
 ### CSV-Daten extern bearbeiten:
-1. Daten mit `📤 CSV Export` exportieren
+1. Daten mit `Export` exportieren
 2. CSV-Datei mit Texteditor öffnen (z.B. Notepad, TextEdit)
 3. Daten nach Bedarf ändern (Format beachten!)
 4. Aktuelle App-Daten löschen
-5. Bearbeitete Datei mit `📥 CSV Import` reimportieren
+5. Bearbeitete Datei mit `Import` reimportieren
 
 **Tipp:** Für größere Korrekturen ist die externe Bearbeitung oft schneller!
 
@@ -91,7 +91,7 @@ Um die App schnell auszuprobieren, können Sie **vorgefertigte Beispieldaten** d
 ### Download und Import:
 
 1. **Beispieldaten herunterladen:** In der App auf den Link "beispiel_stilldaten.csv" im Hilfe-Bereich klicken
-2. **In die App importieren:** Klicken Sie auf `📥 CSV Import` und wählen Sie die heruntergeladene Datei
+2. **In die App importieren:** Klicken Sie auf `Import` und wählen Sie die heruntergeladene Datei
 3. **Testen:** Erkunden Sie alle Funktionen mit simulierten Daten
 
 **Perfekt zum Testen:** Die Beispieldaten zeigen alle App-Funktionen wie Tagesstatistiken, kombinierte Sessions und die verschiedenen Darstellungsformen!
