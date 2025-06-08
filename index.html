@@ -29,7 +29,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: white;
+            background: #ff9a9e;
             min-height: 100vh;
             margin: 0;
             padding: 0;
@@ -37,7 +37,8 @@
 
         .container {
             width: 100%;
-            margin: 0;
+            max-width: 600px;
+            margin: 0 auto;
             background: white;
             border-radius: 0;
             box-shadow: none;
@@ -45,6 +46,20 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+        }
+
+        /* Für größere Bildschirme: Schatten und Rundung hinzufügen */
+        @media (min-width: 601px) {
+            .container {
+                border-radius: 12px;
+                box-shadow: 0 12px 48px rgba(0,0,0,0.25);
+                min-height: calc(100vh - 40px);
+                margin: 20px auto;
+            }
+            
+            body {
+                padding: 0 20px;
+            }
         }
 
         .header {
@@ -110,27 +125,17 @@
         }
 
         .breast-last-text {
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 5px;
-            min-height: 16px;
-            text-align: center;
-        }
-
-        .breast-last-text.left {
-            color: #667eea;
-        }
-
-        .breast-last-text.right {
-            color: #f275b4;
+            /* Wird nicht mehr verwendet - Text ist jetzt in breast-time-text */
+            display: none;
         }
 
         .breast-time-text {
             font-size: 12px;
             font-weight: 600;
             margin-top: 5px;
-            min-height: 16px;
+            min-height: 0;
             text-align: center;
+            display: none;
         }
 
         .breast-time-text.left {
@@ -141,9 +146,7 @@
             color: #f275b4;
         }
 
-        .breast-buttons > *:empty {
-            display: none;
-        }
+
 
         .breast-btn {
             width: 100%;
@@ -224,6 +227,51 @@
             color: #333;
             margin-bottom: 15px;
             font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .timeline-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .timeline-btn {
+            background: linear-gradient(135deg, #ffffff 0%, #e9ecef 100%);
+            color: #666;
+            border: 1px solid #e9ecef;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-btn:hover {
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .timeline-delete-btn {
+            background: linear-gradient(135deg, #ffffff 0%, #e9ecef 100%);
+            color: #666;
+            border: 1px solid #e9ecef;
+            padding: 0;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: 30px;
+            width: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timeline-delete-btn:hover {
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.1);
         }
 
         .last-breast-info {
@@ -417,45 +465,12 @@
 
         .baby-select-row {
             display: flex;
-            margin-bottom: 10px;
-        }
-
-        .baby-buttons-row {
-            display: flex;
             gap: 10px;
             align-items: stretch;
-            flex-wrap: wrap;
-        }
-
-        .baby-btn, .rename-baby-btn, .baby-delete-btn {
-            color: white;
-            border: none;
-            padding: 0 20px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
-
-        .baby-btn, .rename-baby-btn {
-            background: linear-gradient(135deg, #ff9a9e 0%, #d98386 100%);
-        }
-
-        .baby-btn:hover, .rename-baby-btn:hover, .baby-delete-btn:hover {
-            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-        }
-
-        .baby-delete-btn {
-            background: linear-gradient(135deg, #ff9a9e 0%, #d98386 100%);
         }
 
         .baby-select {
-            width: 100%;
+            flex: 1;
             padding: 0 12px;
             border: 2px solid #e9ecef;
             border-radius: 10px;
@@ -465,10 +480,31 @@
             box-sizing: border-box;
         }
 
+        .baby-edit-btn, .baby-add-btn {
+            background: linear-gradient(135deg, #ffffff 0%, #e9ecef 100%);
+            color: #666;
+            border: 1px solid #e9ecef;
+            padding: 0;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: 44px;
+            width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .baby-edit-btn:hover, .baby-add-btn:hover {
+            box-shadow: inset 0 4px 12px rgba(0,0,0,0.1);
+        }
+
         .export-import-controls {
             display: flex;
             gap: 8px;
-            margin-top: 30px;
+            margin-top: 20px;
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
@@ -547,6 +583,8 @@
             border-radius: 15px;
             min-width: 300px;
             max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .modal-title {
@@ -580,6 +618,7 @@
             gap: 10px;
             justify-content: flex-end;
             margin-top: 20px;
+            flex-wrap: wrap;
         }
 
         .btn {
@@ -613,7 +652,7 @@
         }
 
         .readme-modal {
-            max-height: 80vh;
+            max-height: 90vh;
             overflow-y: auto;
         }
 
@@ -674,7 +713,7 @@
 
         .session-modal .modal-content {
             max-width: 600px;
-            max-height: 80vh;
+            max-height: 90vh;
             overflow-y: auto;
         }
 
@@ -729,6 +768,8 @@
             background: linear-gradient(135deg, #ff9a9e 0%, #d98386 100%);
             color: white;
             max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .day-stats-modal .modal-title {
@@ -804,7 +845,19 @@
             <h1 onclick="showReadme()">Muttermilch <span class="info-icon" onclick="showReadme()">i</span></h1>
         </div>
 
-        <div class="breast-buttons">
+        <div class="baby-section" style="padding: 20px 20px 0 20px; background: #f8f9fa; border: none;">
+            <div class="baby-controls">
+                <div class="baby-select-row">
+                    <select class="baby-select" id="babySelect" onchange="switchBaby()">
+                        <option value="Baby">Baby</option>
+                    </select>
+                    <button class="baby-edit-btn" onclick="openEditBabyModal()" title="Baby bearbeiten">✏️</button>
+                    <button class="baby-add-btn" onclick="openBabyModal()" title="Neues Baby hinzufügen">➕</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="breast-buttons" style="padding-top: 0;">
             <div class="breast-buttons-row">
                 <div class="breast-button-container">
                     <div class="breast-last-text left" id="leftLastText"></div>
@@ -825,7 +878,14 @@
         </div>
 
         <div class="timeline">
-            <h3>Stillverlauf</h3>
+            <h3>
+                <span>Stillverlauf</span>
+                <div class="timeline-links">
+                    <button class="timeline-btn" onclick="document.getElementById('csvFileInput').click()">Import</button>
+                    <button class="timeline-btn" onclick="exportToCSV()">Export</button>
+                    <button class="timeline-delete-btn" onclick="confirmDeleteBabyData()" title="Alle Stillzeiten dieses Babys löschen">🗑️</button>
+                </div>
+            </h3>
             <div id="sessionsList">
                 <div class="empty-state">
                     Noch keine Stillzeiten erfasst
@@ -833,27 +893,8 @@
             </div>
         </div>
 
-        <div class="baby-section">
-            <div class="baby-controls">
-                <div class="baby-select-row">
-                    <select class="baby-select" id="babySelect" onchange="switchBaby()">
-                        <option value="Baby">Baby</option>
-                    </select>
-                </div>
-                <div class="baby-buttons-row">
-                    <button class="rename-baby-btn" onclick="openRenameBabyModal()">Umbenennen</button>
-                    <button class="baby-delete-btn" onclick="confirmDeleteBaby()">🗑️ Baby löschen</button>
-                    <button class="baby-btn" onclick="openBabyModal()">Neues Baby</button>
-                </div>
-            </div>
-            <div class="export-import-controls">
-                <div class="export-import-left">
-                    <button class="export-btn" onclick="exportToCSV()">📤 CSV Export</button>
-                    <button class="import-btn" onclick="document.getElementById('csvFileInput').click()">📥 CSV Import</button>
-                    <input type="file" id="csvFileInput" class="file-input" accept=".csv,.CSV,.txt,text/csv,text/plain,application/csv,application/excel" onchange="importFromCSV(event)">
-                </div>
-            </div>
-        </div>
+        <!-- Hidden file input for CSV import -->
+        <input type="file" id="csvFileInput" class="file-input" accept=".csv,.CSV,.txt,text/csv,text/plain,application/csv,application/excel" onchange="importFromCSV(event)">
     </div>
 
     <!-- Modals -->
@@ -871,16 +912,19 @@
         </div>
     </div>
 
-    <div class="modal" id="renameBabyModal">
+    <div class="modal" id="editBabyModal">
         <div class="modal-content">
-            <div class="modal-title">Baby umbenennen</div>
+            <div class="modal-title">Baby bearbeiten</div>
+            <div style="text-align: left; margin-bottom: 15px;">
+                <button class="btn btn-danger btn-small" onclick="confirmDeleteCurrentBaby()">🗑️ Löschen</button>
+            </div>
             <div class="form-group">
-                <label>Neuer Name für "<span id="currentBabyName"></span>":</label>
-                <input type="text" id="newBabyNameInput" placeholder="Neuer Name">
+                <label>Name des Babys:</label>
+                <input type="text" id="editBabyNameInput" placeholder="z.B. Emma">
             </div>
             <div class="modal-buttons">
-                <button class="btn btn-secondary" onclick="closeRenameBabyModal()">Abbrechen</button>
-                <button class="btn btn-primary" onclick="renameBaby()">Umbenennen</button>
+                <button class="btn btn-secondary" onclick="closeEditBabyModal()">Abbrechen</button>
+                <button class="btn btn-primary" onclick="saveEditBaby()">Speichern</button>
             </div>
         </div>
     </div>
@@ -893,6 +937,18 @@
             <div class="modal-buttons">
                 <button class="btn btn-secondary" onclick="closeDeleteConfirmModal()">Abbrechen</button>
                 <button class="btn" style="background: #d63031; color: white;" onclick="deleteBaby()">Löschen</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="deleteDataConfirmModal">
+        <div class="modal-content">
+            <div class="modal-title">Stillzeiten löschen</div>
+            <p>Möchten Sie wirklich alle Stillzeiten von "<span id="deleteDataBabyName"></span>" löschen?</p>
+            <p style="color: #d63031; font-weight: 600; margin-top: 15px;">⚠️ Diese Aktion kann nicht rückgängig gemacht werden!</p>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeDeleteDataConfirmModal()">Abbrechen</button>
+                <button class="btn" style="background: #d63031; color: white;" onclick="deleteBabyData()">Stillzeiten löschen</button>
             </div>
         </div>
     </div>
@@ -1209,19 +1265,18 @@
             updateUI();
         };
 
-        // Baby umbenennen Funktionen
-        window.openRenameBabyModal = () => {
-            document.getElementById('currentBabyName').textContent = currentBaby;
-            document.getElementById('newBabyNameInput').value = currentBaby;
-            document.getElementById('renameBabyModal').style.display = 'block';
+        // Baby bearbeiten Funktionen
+        window.openEditBabyModal = () => {
+            document.getElementById('editBabyNameInput').value = currentBaby;
+            document.getElementById('editBabyModal').style.display = 'block';
         };
 
-        window.closeRenameBabyModal = () => {
-            document.getElementById('renameBabyModal').style.display = 'none';
+        window.closeEditBabyModal = () => {
+            document.getElementById('editBabyModal').style.display = 'none';
         };
 
-        window.renameBaby = () => {
-            const newName = document.getElementById('newBabyNameInput').value.trim();
+        window.saveEditBaby = () => {
+            const newName = document.getElementById('editBabyNameInput').value.trim();
             if (!newName) {
                 showError('Bitte einen Namen eingeben');
                 return;
@@ -1266,13 +1321,44 @@
             
             updateBabySelect();
             updateUI();
-            closeRenameBabyModal();
+            closeEditBabyModal();
         };
 
-        // Baby löschen Funktionen
-        window.confirmDeleteBaby = () => {
+        window.confirmDeleteCurrentBaby = () => {
+            closeEditBabyModal();
             document.getElementById('deleteBabyName').textContent = currentBaby;
             document.getElementById('deleteConfirmModal').style.display = 'block';
+        };
+
+        // Baby-Daten löschen Funktionen
+        window.confirmDeleteBabyData = () => {
+            document.getElementById('deleteDataBabyName').textContent = currentBaby;
+            document.getElementById('deleteDataConfirmModal').style.display = 'block';
+        };
+
+        window.closeDeleteDataConfirmModal = () => {
+            document.getElementById('deleteDataConfirmModal').style.display = 'none';
+        };
+
+        window.deleteBabyData = () => {
+            const babyToDeleteData = currentBaby;
+            
+            // Nur die Sessions des aktuellen Babys löschen, Baby selbst behalten
+            sessions = sessions.filter(session => session.baby !== babyToDeleteData);
+            
+            try {
+                const sessionsToSave = sessions.map(session => ({
+                    ...session,
+                    startTime: session.startTime.toISOString(),
+                    endTime: session.endTime.toISOString()
+                }));
+                localStorage.setItem('breastfeedingSessions', JSON.stringify(sessionsToSave));
+            } catch (error) {
+                // Silent fail
+            }
+            
+            updateUI();
+            closeDeleteDataConfirmModal();
         };
 
         window.closeDeleteConfirmModal = () => {
@@ -1379,8 +1465,6 @@
         function updateBreastButtons() {
             const leftBtn = document.getElementById('leftBreastBtn');
             const rightBtn = document.getElementById('rightBreastBtn');
-            const leftLastText = document.getElementById('leftLastText');
-            const rightLastText = document.getElementById('rightLastText');
             const leftTimeText = document.getElementById('leftTimeText');
             const rightTimeText = document.getElementById('rightTimeText');
 
@@ -1391,10 +1475,10 @@
             rightBtn.textContent = 'Rechte Brust';
             leftBtn.disabled = false;
             rightBtn.disabled = false;
-            
-            // Reset external texts
-            leftLastText.textContent = '';
-            rightLastText.textContent = '';
+
+            // Reset time texts
+            leftTimeText.style.display = 'none';
+            rightTimeText.style.display = 'none';
             leftTimeText.textContent = '';
             rightTimeText.textContent = '';
 
@@ -1440,48 +1524,24 @@
                     leftBtn.textContent = 'Stop';
                     leftBtn.classList.add('active');
                     rightBtn.classList.add('inactive-during-session');
-                    
-                    // Während Session läuft: nur Zeit-Texte kollabieren lassen
-                    leftTimeText.style.minHeight = '0';
-                    leftTimeText.style.marginTop = '0';
-                    rightTimeText.style.minHeight = '0';
-                    rightTimeText.style.marginTop = '0';
-                    
-                    // Platz unten kompensieren (21px = 16px min-height + 5px margin)
-                    document.getElementById('currentSession').style.marginBottom = '21px';
                 } else {
                     rightBtn.textContent = 'Stop';
                     rightBtn.classList.add('active');  
                     leftBtn.classList.add('inactive-during-session');
-                    
-                    // Während Session läuft: nur Zeit-Texte kollabieren lassen
-                    leftTimeText.style.minHeight = '0';
-                    leftTimeText.style.marginTop = '0';
-                    rightTimeText.style.minHeight = '0';
-                    rightTimeText.style.marginTop = '0';
-                    
-                    // Platz unten kompensieren (21px = 16px min-height + 5px margin)
-                    document.getElementById('currentSession').style.marginBottom = '21px';
                 }
+                // Während einer Live-Session: Zeit-Texte ausblenden
+                leftTimeText.style.display = 'none';
+                rightTimeText.style.display = 'none';
             } else {
-                // Reset margins and heights when no session is running
-                leftTimeText.style.minHeight = '16px';
-                leftTimeText.style.marginTop = '5px';
-                rightTimeText.style.minHeight = '16px';
-                rightTimeText.style.marginTop = '5px';
-                
-                // Reset bottom margin
-                document.getElementById('currentSession').style.marginBottom = '0';
-                
-                // Keine Session läuft - zeige "zuletzt" Text außerhalb der entsprechenden Brust
-                if (lastUsedBreast === 'left') {
+                // Keine Session läuft - zeige "zuletzt" Text unterhalb des entsprechenden Buttons
+                if (lastUsedBreast === 'left' && timeText) {
                     leftBtn.classList.add('last-used');
-                    leftLastText.textContent = 'zuletzt';
-                    leftTimeText.textContent = timeText;
-                } else if (lastUsedBreast === 'right') {
+                    leftTimeText.textContent = `zuletzt • ${timeText}`;
+                    leftTimeText.style.display = 'block';
+                } else if (lastUsedBreast === 'right' && timeText) {
                     rightBtn.classList.add('last-used');
-                    rightLastText.textContent = 'zuletzt';
-                    rightTimeText.textContent = timeText;
+                    rightTimeText.textContent = `zuletzt • ${timeText}`;
+                    rightTimeText.style.display = 'block';
                 }
             }
         }
@@ -1503,8 +1563,10 @@
                         <div>${currentSession.breast === 'left' ? 'Linke Brust' : 'Rechte Brust'} • ${currentSession.baby}</div>
                     </div>
                 `;
+                container.style.display = 'block';
             } else {
                 container.innerHTML = '';
+                container.style.display = 'none';
             }
         }
 
@@ -1573,6 +1635,7 @@
             
             for (let i = 0; i < combinedSessions.length; i++) {
                 const combinedSession = combinedSessions[i];
+                // Sessions werden nach Startdatum gruppiert (wichtig für Sessions über Mitternacht)
                 const sessionDate = combinedSession.startTime.toLocaleDateString('de-DE');
                 
                 if (currentDay !== sessionDate) {
@@ -2118,9 +2181,18 @@
 
         function createSingleSessionEditForm(session, subIndex, sessionIndex) {
             const sessionId = `${sessionIndex}-${subIndex}`;
-            const startDate = session.startTime.toLocaleDateString('de-DE');
+            
+            // Lokale Datums-/Zeitformatierung verwenden statt UTC
+            function formatDateForInput(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+            
+            const startDate = formatDateForInput(session.startTime);
             const startTime = session.startTime.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'});
-            const endDate = session.endTime.toLocaleDateString('de-DE');
+            const endDate = formatDateForInput(session.endTime);
             const endTime = session.endTime.toLocaleTimeString('de-DE', {hour: '2-digit', minute: '2-digit'});
             
             const babyOptions = babies.map(baby => 
@@ -2155,7 +2227,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Startdatum:</label>
-                            <input type="date" id="startDate-${sessionId}" value="${session.startTime.toISOString().split('T')[0]}">
+                            <input type="date" id="startDate-${sessionId}" value="${startDate}">
                         </div>
                         <div class="form-group">
                             <label>Startzeit:</label>
@@ -2166,7 +2238,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Enddatum:</label>
-                            <input type="date" id="endDate-${sessionId}" value="${session.endTime.toISOString().split('T')[0]}">
+                            <input type="date" id="endDate-${sessionId}" value="${endDate}">
                         </div>
                         <div class="form-group">
                             <label>Endzeit:</label>
@@ -2370,6 +2442,7 @@
 
         // Tagesstatistik Modal
         window.openDayStatsModal = (dateString) => {
+            // Sessions nach Startdatum filtern (Sessions über Mitternacht gehören zum Starttag)
             const filteredSessions = sessions.filter(session => 
                 session.baby === currentBaby && 
                 session.startTime.toLocaleDateString('de-DE') === dateString
