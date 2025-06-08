@@ -32,9 +32,9 @@ Muttermilch ist eine **kostenlose, webbasierte App** zum Tracken von Stillzeiten
 
 ### Daten zwischen Geräten übertragen:
 
-1. Auf dem alten Gerät: CSV exportieren
+1. Auf dem alten Gerät: exportieren
 2. Datei auf das neue Gerät übertragen
-3. Auf dem neuen Gerät: CSV importieren
+3. Auf dem neuen Gerät: importieren
 
 ## ✏️ Handschriftliche Daten importieren
 
